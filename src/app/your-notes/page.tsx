@@ -27,8 +27,34 @@ export default function YourNotesPage() {
         const key = localStorage.key(i);
         if (!key) continue;
         
-        // Process different types of notes
-        if (key.startsWith('note-')) {
+        // Process binder.v1.notes keys (current storage format)
+        if (key.startsWith('binder.v1.notes.')) {
+          // binder.v1.notes.{section}.{lesson}
+          const noteKey = key.replace('binder.v1.notes.', '');
+          const parts = noteKey.split('.');
+          if (parts.length === 2) {
+            const content = localStorage.getItem(key);
+            if (content) {
+              try {
+                const noteData = JSON.parse(content);
+                if (noteData.content && noteData.content.trim()) {
+                  notes.push({
+                    key,
+                    content: noteData.content.trim(),
+                    section: parts[0],
+                    lesson: parts[1],
+                    type: 'lesson',
+                    sectionTitle: formatSectionTitle(parts[0])
+                  });
+                }
+              } catch (error) {
+                console.warn('Failed to parse note data:', error);
+              }
+            }
+          }
+        }
+        // Also check for legacy note formats for backward compatibility
+        else if (key.startsWith('note-')) {
           // Main lesson notes: note-{section}-{lesson}
           const parts = key.split('-');
           if (parts.length === 3) {

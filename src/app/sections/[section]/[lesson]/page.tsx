@@ -933,12 +933,12 @@ export default function LessonPage() {
   const params = useParams();
   const router = useRouter();
   const { getLessonProgress, markLessonComplete } = useBinderStore();
-  const { note, updateNote: _updateNote } = useNote(params.section as string, params.lesson as string);
+  const { note, updateNote } = useNote(params.section as string, params.lesson as string);
   
   const [section, setSection] = useState<Section | null>(null);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
-  const [, setNoteContent] = useState('');
+  const [noteContent, setNoteContent] = useState('');
   
   // State for interactive scenario checkpoints
   const [checkpointResponses, setCheckpointResponses] = useState({
@@ -1006,6 +1006,10 @@ export default function LessonPage() {
 
   const nextLesson = getNextLesson();
 
+  const handleNoteChange = (content: string) => {
+    setNoteContent(content);
+    updateNote(content);
+  };
 
   const handleCheckpointResponse = (checkpoint: string, response: string) => {
     setCheckpointResponses(prev => ({
@@ -3927,6 +3931,8 @@ export default function LessonPage() {
             <h3 className="font-semibold text-lg mb-4">Your Notes</h3>
             <div className="bg-slate-50 bg-opacity-90 p-4 border border-slate-200 rounded-lg">
               <textarea
+                value={noteContent}
+                onChange={(e) => handleNoteChange(e.target.value)}
                 placeholder="Notes for this skill..."
                 className="w-full min-h-[120px] p-4 border border-slate-200 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 style={{ fontFamily: 'ui-monospace, SFMono-Regular, Monaco, Consolas, monospace' }}
@@ -3984,6 +3990,8 @@ export default function LessonPage() {
             <h3 className="font-semibold text-lg mb-4">Your Notes</h3>
             <div className="bg-slate-50 bg-opacity-90 p-4 border border-slate-200 rounded-lg">
               <textarea
+                value={noteContent}
+                onChange={(e) => handleNoteChange(e.target.value)}
                 placeholder="Notes for this skill..."
                 className="w-full min-h-[120px] p-4 border border-slate-200 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 style={{ fontFamily: 'ui-monospace, SFMono-Regular, Monaco, Consolas, monospace' }}
