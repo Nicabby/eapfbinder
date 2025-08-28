@@ -122,7 +122,7 @@ export default function YourNotesPage() {
         }
         
         // Finally by note type (lesson, final, stepback)
-        const typeOrder = { 'lesson': 0, 'final': 1, 'stepback': 2 };
+        const typeOrder: Record<string, number> = { 'lesson': 0, 'final': 1, 'stepback': 2, 'section': 3 };
         return typeOrder[a.type] - typeOrder[b.type];
       });
       
@@ -308,7 +308,7 @@ export default function YourNotesPage() {
               let hasStepBackSection = false;
               
               return allNotes.map((note) => {
-                let sectionTitle = note.type === 'stepback' ? 'Step Back Journal' : note.sectionTitle;
+                const sectionTitle = note.type === 'stepback' ? 'Step Back Journal' : note.sectionTitle;
                 const showSectionHeader = currentSection !== sectionTitle;
                 
                 // Track if we need to show step back section
