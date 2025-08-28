@@ -51,7 +51,7 @@ export default function PDFPasswordPrompt({
         const errorData = await response.json();
         setError(errorData.message || 'Incorrect password');
       }
-    } catch (error) {
+    } catch {
       setError('Failed to verify password. Please try again.');
     } finally {
       setLoading(false);

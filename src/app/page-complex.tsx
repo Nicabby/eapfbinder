@@ -43,7 +43,7 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <PagePaper showRings={false}>
+      <PagePaper _showRings={false}>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
@@ -53,7 +53,7 @@ export default function HomePage() {
 
   if (!courseData) {
     return (
-      <PagePaper showRings={false}>
+      <PagePaper _showRings={false}>
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
             Unable to Load Course Data
@@ -67,7 +67,7 @@ export default function HomePage() {
   }
 
   return (
-    <PagePaper showRings={false}>
+    <PagePaper _showRings={false}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -138,7 +138,7 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-center mb-8">Program Sections</h2>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {courseData.sections.map((section, index) => (
+            {courseData.sections.map((section) => (
               <div
                 key={section.id}
                 className="p-4 rounded-lg border border-slate-200 hover:shadow-md transition-shadow cursor-pointer group bg-white"

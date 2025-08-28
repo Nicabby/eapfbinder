@@ -787,6 +787,12 @@
           ],
           "resources": [
             {
+              "label": "Habits to Adopt",
+              "href": "/resources/HabitstoAdopt.pdf",
+              "type": "pdf",
+              "category": "Action Tools"
+            },
+            {
               "label": "Types of Bias",
               "href": "/resources/TypesofBias.pdf",
               "type": "pdf",

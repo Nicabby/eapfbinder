@@ -66,7 +66,7 @@ export const useBinderStore = create<BinderStore>((set, get) => ({
   clearNote: (sectionId: string, lessonId: string) => {
     const key = createNoteKey(sectionId, lessonId);
     set(state => {
-      const { [key]: removed, ...remainingNotes } = state.notes;
+      const { [key]: _removed, ...remainingNotes } = state.notes;
       return { notes: remainingNotes };
     });
     

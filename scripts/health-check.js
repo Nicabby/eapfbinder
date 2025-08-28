@@ -13,9 +13,9 @@ const testUrls = [
   'http://localhost:3000/manifest.json'
 ];
 
-async function testUrl(testUrl) {
+async function testUrl(url) {
   return new Promise((resolve) => {
-    const urlObj = parseUrl(testUrl);
+    const urlObj = parseUrl(url);
     const client = urlObj.protocol === 'https:' ? https : http;
     
     const req = client.request({

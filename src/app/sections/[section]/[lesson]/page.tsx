@@ -171,7 +171,7 @@ function QuestionRewritingActivity() {
                         aria-label={`Model answer for question ${question.id}`}
                       >
                         <p className="text-sm font-medium text-blue-900 mb-1">Model Answer:</p>
-                        <p className="text-blue-800 leading-relaxed">"{question.modelAnswer}"</p>
+                        <p className="text-blue-800 leading-relaxed">&quot;{question.modelAnswer}&quot;</p>
                       </div>
                     )}
                   </div>
@@ -298,7 +298,7 @@ function ListeningMatchingActivity() {
       {showSummary && (
         <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
           <h4 className="font-semibold text-green-900 mb-2">🎉 Excellent Work!</h4>
-          <p className="text-green-800 mb-3">You've successfully matched all scenarios to their listening strategies:</p>
+          <p className="text-green-800 mb-3">You&apos;ve successfully matched all scenarios to their listening strategies:</p>
           <div className="space-y-1 text-sm">
             {scenarios.map(scenario => (
               <div key={scenario.id} className="flex items-center gap-2">
@@ -347,7 +347,7 @@ function ListeningMatchingActivity() {
               <button
                 key={scenario.id}
                 onClick={() => selectedStrategy && handleStrategyClick(selectedStrategy, scenario.id)}
-                disabled={!selectedStrategy || (matches[scenario.id] && feedback[scenario.id])}
+                disabled={!selectedStrategy || Boolean(matches[scenario.id] && feedback[scenario.id])}
                 className={`w-full p-3 rounded-lg border-2 transition-all duration-200 text-left ${
                   matches[scenario.id] && feedback[scenario.id]
                     ? 'border-green-300 bg-green-50 cursor-not-allowed'
@@ -438,7 +438,7 @@ function ListeningMatchingActivity() {
         {/* Activity Summary */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800 leading-relaxed">
-            This activity helps you connect real facilitation scenarios with the listening strategies you've just learned. By practicing how to match facilitator responses to the right approach, you'll see how small choices—like waiting in silence, reflecting back feelings, or using open body language—make a big difference in building trust and safety.
+            This activity helps you connect real facilitation scenarios with the listening strategies you&apos;ve just learned. By practicing how to match facilitator responses to the right approach, you&apos;ll see how small choices—like waiting in silence, reflecting back feelings, or using open body language—make a big difference in building trust and safety.
           </p>
         </div>
       </div>
@@ -528,7 +528,7 @@ function GroupDynamicsPracticeActivity() {
       </div>
 
       <div className="space-y-6">
-        {scenarios.map((scenario, index) => (
+        {scenarios.map((scenario) => (
           <div key={scenario.id} className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
             <div className="mb-4">
               <div className="flex items-start gap-3 mb-3">
@@ -600,7 +600,7 @@ function GroupDynamicsPracticeActivity() {
         <div className="bg-green-50 border border-green-200 rounded-lg p-6">
           <h4 className="text-lg font-semibold text-green-900 mb-2">Well done!</h4>
           <p className="text-green-800 leading-relaxed">
-            You've practiced responding to five common group dynamics. Remember, noticing patterns early helps you guide the group with confidence.
+            You&apos;ve practiced responding to five common group dynamics. Remember, noticing patterns early helps you guide the group with confidence.
           </p>
         </div>
       )}
@@ -933,12 +933,12 @@ export default function LessonPage() {
   const params = useParams();
   const router = useRouter();
   const { getLessonProgress, markLessonComplete } = useBinderStore();
-  const { note, updateNote } = useNote(params.section as string, params.lesson as string);
+  const { note, updateNote: _updateNote } = useNote(params.section as string, params.lesson as string);
   
   const [section, setSection] = useState<Section | null>(null);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
-  const [noteContent, setNoteContent] = useState('');
+  const [, setNoteContent] = useState('');
   
   // State for interactive scenario checkpoints
   const [checkpointResponses, setCheckpointResponses] = useState({
@@ -1006,10 +1006,6 @@ export default function LessonPage() {
 
   const nextLesson = getNextLesson();
 
-  const handleNoteChange = (content: string) => {
-    setNoteContent(content);
-    updateNote(content);
-  };
 
   const handleCheckpointResponse = (checkpoint: string, response: string) => {
     setCheckpointResponses(prev => ({
@@ -1186,7 +1182,7 @@ export default function LessonPage() {
           </h2>
           {lesson.id === 'build-feedback' ? (
             <p className="text-slate-700 leading-relaxed">
-              Feedback isn't about right or wrong—it's about guiding growth. In facilitation, your words can build trust, spark confidence, and encourage deeper engagement. When offered with care and clarity, feedback becomes a tool that helps participants see their strengths, understand their opportunities, and step forward with greater self-awareness.
+              Feedback isn&apos;t about right or wrong—it&apos;s about guiding growth. In facilitation, your words can build trust, spark confidence, and encourage deeper engagement. When offered with care and clarity, feedback becomes a tool that helps participants see their strengths, understand their opportunities, and step forward with greater self-awareness.
             </p>
           ) : lesson.id === 'practice-feedback' ? (
             <div className="space-y-8">
@@ -1199,7 +1195,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Facilitator Response:</p>
-                    <p className="text-green-700 leading-relaxed italic">"I noticed you jumped ahead before checking the directions. Slowing down will help you catch all the details. You've got great energy—let's channel it into accuracy too."</p>
+                    <p className="text-green-700 leading-relaxed italic">&quot;I noticed you jumped ahead before checking the directions. Slowing down will help you catch all the details. You&apos;ve got great energy—let&apos;s channel it into accuracy too.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Why it Works:</p>
@@ -1217,15 +1213,15 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-blue-800 mb-2">Scenario:</p>
-                    <p className="text-blue-700 leading-relaxed">At the start of a journaling activity, the facilitator reminds the group of today's goal: "Share one strength you want to practice." Halfway through, a participant looks unsure.</p>
+                    <p className="text-blue-700 leading-relaxed">At the start of a journaling activity, the facilitator reminds the group of today&apos;s goal: &quot;Share one strength you want to practice.&quot; Halfway through, a participant looks unsure.</p>
                   </div>
                   <div>
                     <p className="font-semibold text-blue-800 mb-2">Facilitator Response:</p>
-                    <p className="text-blue-700 leading-relaxed italic">"Remember our goal is to name one strength. What's one quality you'd like to practice more often? It doesn't have to be perfect—you can always revise later."</p>
+                    <p className="text-blue-700 leading-relaxed italic">&quot;Remember our goal is to name one strength. What&apos;s one quality you&apos;d like to practice more often? It doesn&apos;t have to be perfect—you can always revise later.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-blue-800 mb-2">Why it Works:</p>
-                    <p className="text-blue-700 leading-relaxed">The facilitator connects back to the session goal and shows flexibility. This reinforces that feedback isn't just an end-point judgment—it's a continuous guide for progress.</p>
+                    <p className="text-blue-700 leading-relaxed">The facilitator connects back to the session goal and shows flexibility. This reinforces that feedback isn&apos;t just an end-point judgment—it&apos;s a continuous guide for progress.</p>
                   </div>
                   <div className="bg-blue-100 p-4 rounded-lg">
                     <p className="font-semibold text-blue-800 mb-2">Facilitator Tip:</p>
@@ -1243,7 +1239,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-purple-800 mb-2">Facilitator Prompt:</p>
-                    <p className="text-purple-700 leading-relaxed italic">"On a scale from 1–5, how well did your team communicate? Write your number, then share one thing you'd do differently next time."</p>
+                    <p className="text-purple-700 leading-relaxed italic">&quot;On a scale from 1–5, how well did your team communicate? Write your number, then share one thing you&apos;d do differently next time.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-purple-800 mb-2">Why it Works:</p>
@@ -1268,7 +1264,7 @@ export default function LessonPage() {
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-medium">1</span>
                     <div>
-                      <strong>Set Intentions</strong> – Decide what skills, behaviors, or goals you'll focus on reinforcing during the session.
+                      <strong>Set Intentions</strong> – Decide what skills, behaviors, or goals you&apos;ll focus on reinforcing during the session.
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
@@ -1292,7 +1288,7 @@ export default function LessonPage() {
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-medium">5</span>
                     <div>
-                      <strong>Stay Flexible</strong> – Use the plan as a guide, but adjust in real time to the group's energy and needs.
+                      <strong>Stay Flexible</strong> – Use the plan as a guide, but adjust in real time to the group&apos;s energy and needs.
                     </div>
                   </li>
                 </ol>
@@ -1308,7 +1304,7 @@ export default function LessonPage() {
           ) : lesson.id === 'build-independence' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Independence grows when youth feel trusted. Trust communicates belief in their ability to try, make choices, and learn from mistakes. When facilitators step back at the right times, they send a powerful message: "You are capable. Your effort matters. You don't need to be perfect to belong here."
+                Independence grows when youth feel trusted. Trust communicates belief in their ability to try, make choices, and learn from mistakes. When facilitators step back at the right times, they send a powerful message: &quot;You are capable. Your effort matters. You don&apos;t need to be perfect to belong here.&quot;
               </p>
               
               <p className="text-slate-700 leading-relaxed">
@@ -1357,7 +1353,7 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-teal-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-teal-800">Promote Reflection</strong> <span className="text-teal-700">– Ask participants to think about what worked, what didn't, and what they'd do differently.</span>
+                      <strong className="text-teal-800">Promote Reflection</strong> <span className="text-teal-700">– Ask participants to think about what worked, what didn&apos;t, and what they&apos;d do differently.</span>
                     </div>
                   </div>
                 </div>
@@ -1374,15 +1370,15 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-emerald-800 mb-2">Facilitator Response:</p>
-                    <p className="text-emerald-700 leading-relaxed italic">"You can start with markers or collage materials—what feels more fun for you right now?"</p>
+                    <p className="text-emerald-700 leading-relaxed italic">&quot;You can start with markers or collage materials—what feels more fun for you right now?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-emerald-800 mb-2">Why it Works:</p>
-                    <p className="text-emerald-700 leading-relaxed">Offering choices signals trust in the participant's ability to decide, which builds confidence.</p>
+                    <p className="text-emerald-700 leading-relaxed">Offering choices signals trust in the participant&apos;s ability to decide, which builds confidence.</p>
                   </div>
                   <div className="bg-emerald-100 p-4 rounded-lg">
                     <p className="font-semibold text-emerald-800 mb-2">Facilitator Tip:</p>
-                    <p className="text-emerald-700 leading-relaxed">Frame choices so both options are positive—avoid "right" vs. "wrong" choices.</p>
+                    <p className="text-emerald-700 leading-relaxed">Frame choices so both options are positive—avoid &quot;right&quot; vs. &quot;wrong&quot; choices.</p>
                   </div>
                 </div>
               </div>
@@ -1396,7 +1392,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-orange-800 mb-2">Facilitator Response:</p>
-                    <p className="text-orange-700 leading-relaxed italic">"I see it's tricky. What's one new strategy your group could try before I jump in?"</p>
+                    <p className="text-orange-700 leading-relaxed italic">&quot;I see it&apos;s tricky. What&apos;s one new strategy your group could try before I jump in?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-orange-800 mb-2">Why it Works:</p>
@@ -1418,7 +1414,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-rose-800 mb-2">Facilitator Response:</p>
-                    <p className="text-rose-700 leading-relaxed italic">"Thanks for leading! What worked well? And what's one tweak you'd make if you ran it again?"</p>
+                    <p className="text-rose-700 leading-relaxed italic">&quot;Thanks for leading! What worked well? And what&apos;s one tweak you&apos;d make if you ran it again?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-rose-800 mb-2">Why it Works:</p>
@@ -1426,7 +1422,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-rose-100 p-4 rounded-lg">
                     <p className="font-semibold text-rose-800 mb-2">Facilitator Tip:</p>
-                    <p className="text-rose-700 leading-relaxed">Normalize mistakes by calling them "practice rounds" or "test runs."</p>
+                    <p className="text-rose-700 leading-relaxed">Normalize mistakes by calling them &quot;practice rounds&quot; or &quot;test runs.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -1440,15 +1436,15 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-indigo-800 mb-2">Facilitator Prompt:</p>
-                    <p className="text-indigo-700 leading-relaxed italic">"Take a minute to think—what part of this conversation did you contribute most to? What's one thing you'd like to try next time?"</p>
+                    <p className="text-indigo-700 leading-relaxed italic">&quot;Take a minute to think—what part of this conversation did you contribute most to? What&apos;s one thing you&apos;d like to try next time?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-indigo-800 mb-2">Why it Works:</p>
-                    <p className="text-indigo-700 leading-relaxed">Reflection encourages self-awareness and reinforces that participants' growth belongs to them.</p>
+                    <p className="text-indigo-700 leading-relaxed">Reflection encourages self-awareness and reinforces that participants&apos; growth belongs to them.</p>
                   </div>
                   <div className="bg-indigo-100 p-4 rounded-lg">
                     <p className="font-semibold text-indigo-800 mb-2">Facilitator Tip:</p>
-                    <p className="text-indigo-700 leading-relaxed">Use open-ended prompts that start with "what" or "how" to guide reflection without judgment.</p>
+                    <p className="text-indigo-700 leading-relaxed">Use open-ended prompts that start with &quot;what&quot; or &quot;how&quot; to guide reflection without judgment.</p>
                   </div>
                 </div>
               </div>
@@ -1471,7 +1467,7 @@ export default function LessonPage() {
                       <h4 className="font-semibold text-cyan-900 mb-2">Pre-Brief with Structured Choices</h4>
                       <p className="text-sm text-cyan-700 font-medium mb-2">Strategy: Structured Choices</p>
                       <p className="text-cyan-800 mb-2"><strong>Facilitator Move:</strong> Offer options on how youth can record or brainstorm.</p>
-                      <p className="text-cyan-800"><strong>Why it Works:</strong> Builds early ownership and signals trust in participants' decision-making.</p>
+                      <p className="text-cyan-800"><strong>Why it Works:</strong> Builds early ownership and signals trust in participants&apos; decision-making.</p>
                     </div>
                   </div>
 
@@ -1490,7 +1486,7 @@ export default function LessonPage() {
                     <div className="flex-1">
                       <h4 className="font-semibold text-cyan-900 mb-2">Guided Check-In with Reflection Prompt</h4>
                       <p className="text-sm text-cyan-700 font-medium mb-2">Strategy: Reflection Prompts</p>
-                      <p className="text-cyan-800 mb-2"><strong>Facilitator Move:</strong> Ask questions like, "What strengths could help your team right now?"</p>
+                      <p className="text-cyan-800 mb-2"><strong>Facilitator Move:</strong> Ask questions like, &quot;What strengths could help your team right now?&quot;</p>
                       <p className="text-cyan-800"><strong>Why it Works:</strong> Connects abstract traits to action, encouraging problem-solving without facilitator takeover.</p>
                     </div>
                   </div>
@@ -1510,7 +1506,7 @@ export default function LessonPage() {
                     <div className="flex-1">
                       <h4 className="font-semibold text-cyan-900 mb-2">Goal-Setting in the Debrief</h4>
                       <p className="text-sm text-cyan-700 font-medium mb-2">Strategy: Personal Goal-Setting</p>
-                      <p className="text-cyan-800 mb-2"><strong>Facilitator Move:</strong> Ask, "What's one strength you want to use more next time?"</p>
+                      <p className="text-cyan-800 mb-2"><strong>Facilitator Move:</strong> Ask, &quot;What&apos;s one strength you want to use more next time?&quot;</p>
                       <p className="text-cyan-800"><strong>Why it Works:</strong> Turns a group experience into individual future growth.</p>
                     </div>
                   </div>
@@ -1537,7 +1533,7 @@ export default function LessonPage() {
           ) : lesson.id === 'build-decision-making' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Strong facilitators know that part of leadership is reading the room and adjusting in the moment. Pivoting isn't abandoning your plan—it's responding to what participants need so learning stays meaningful and safe.
+                Strong facilitators know that part of leadership is reading the room and adjusting in the moment. Pivoting isn&apos;t abandoning your plan—it&apos;s responding to what participants need so learning stays meaningful and safe.
               </p>
 
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
@@ -1576,7 +1572,7 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-violet-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-violet-800">Cognitive/Engagement Cues</strong> <span className="text-violet-700">– participants aren't grasping instructions, or focus is slipping.</span>
+                      <strong className="text-violet-800">Cognitive/Engagement Cues</strong> <span className="text-violet-700">– participants aren&apos;t grasping instructions, or focus is slipping.</span>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -1597,7 +1593,7 @@ export default function LessonPage() {
               <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-3 text-slate-900">Why it Matters:</h3>
                 <p className="text-slate-700 leading-relaxed">
-                  Pivoting in response to these signals shows participants that their needs take priority over "sticking to the script." It builds trust, keeps sessions alive, and models adaptive leadership.
+                  Pivoting in response to these signals shows participants that their needs take priority over &quot;sticking to the script.&quot; It builds trust, keeps sessions alive, and models adaptive leadership.
                 </p>
               </div>
             </div>
@@ -1612,7 +1608,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-red-800 mb-2">Facilitator Pivot:</p>
-                    <p className="text-red-700 leading-relaxed italic">"Looks like our brains need a reset—let's stand up for a quick stretch and then share one word that describes how you're feeling right now."</p>
+                    <p className="text-red-700 leading-relaxed italic">&quot;Looks like our brains need a reset—let&apos;s stand up for a quick stretch and then share one word that describes how you&apos;re feeling right now.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-red-800 mb-2">Why it Works:</p>
@@ -1634,7 +1630,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-yellow-800 mb-2">Facilitator Pivot:</p>
-                    <p className="text-yellow-700 leading-relaxed italic">"Let's pause. Remember, what's shared here deserves respect. Can someone reflect back what they heard just now, so we can really honor that moment?"</p>
+                    <p className="text-yellow-700 leading-relaxed italic">&quot;Let&apos;s pause. Remember, what&apos;s shared here deserves respect. Can someone reflect back what they heard just now, so we can really honor that moment?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-yellow-800 mb-2">Why it Works:</p>
@@ -1656,7 +1652,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-sky-800 mb-2">Facilitator Pivot:</p>
-                    <p className="text-sky-700 leading-relaxed italic">"Looks like the weather has its own plan! Instead of our outdoor challenge, let's bring the energy inside—we'll adapt the teamwork game to fit our space."</p>
+                    <p className="text-sky-700 leading-relaxed italic">&quot;Looks like the weather has its own plan! Instead of our outdoor challenge, let&apos;s bring the energy inside—we&apos;ll adapt the teamwork game to fit our space.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-sky-800 mb-2">Why it Works:</p>
@@ -1678,7 +1674,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-lime-800 mb-2">Facilitator Pivot:</p>
-                    <p className="text-lime-700 leading-relaxed italic">"That's a powerful example of leadership through empathy. Let's pause here—who else has a story of showing leadership in an everyday way?"</p>
+                    <p className="text-lime-700 leading-relaxed italic">&quot;That&apos;s a powerful example of leadership through empathy. Let&apos;s pause here—who else has a story of showing leadership in an everyday way?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-lime-800 mb-2">Why it Works:</p>
@@ -1694,14 +1690,14 @@ export default function LessonPage() {
           ) : lesson.id === 'strengthen-decision-making' ? (
             <div className="space-y-8">
               <p className="text-slate-700 leading-relaxed">
-                You've been facilitating a leadership session, and halfway through, the group's energy suddenly shifts. Use this scenario to practice real-time decision-making skills as you navigate changing group dynamics.
+                You&apos;ve been facilitating a leadership session, and halfway through, the group&apos;s energy suddenly shifts. Use this scenario to practice real-time decision-making skills as you navigate changing group dynamics.
               </p>
               
               {/* Checkpoint 1 */}
               <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 text-slate-900">Checkpoint 1: Initial Setup</h3>
                 <p className="text-slate-700 leading-relaxed mb-4">
-                  You're 20 minutes into a structured team-building activity. The group had been engaged and collaborative, but now you notice several participants looking at their phones, two people whispering in the corner, and the overall energy feels flat.
+                  You&apos;re 20 minutes into a structured team-building activity. The group had been engaged and collaborative, but now you notice several participants looking at their phones, two people whispering in the corner, and the overall energy feels flat.
                 </p>
                 <p className="font-medium text-slate-800 mb-3">
                   What is your immediate response to this shift in group energy?
@@ -1723,7 +1719,7 @@ export default function LessonPage() {
                 {expandedAnswers.answer1 && (
                   <div className="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
                     <p className="text-blue-800 leading-relaxed">
-                      <strong>Pause and acknowledge:</strong> "I'm noticing our energy has shifted a bit. Let's take a moment to reset." Then offer a choice: "Would you prefer to take a 2-minute stretch break, or should we shift gears and try something more active?" This acknowledges the change without blame and gives the group agency in the solution.
+                      <strong>Pause and acknowledge:</strong> &quot;I&apos;m noticing our energy has shifted a bit. Let&apos;s take a moment to reset.&quot; Then offer a choice: &quot;Would you prefer to take a 2-minute stretch break, or should we shift gears and try something more active?&quot; This acknowledges the change without blame and gives the group agency in the solution.
                     </p>
                   </div>
                 )}
@@ -1733,7 +1729,7 @@ export default function LessonPage() {
               <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 text-slate-900">Checkpoint 2: Implementing Change</h3>
                 <p className="text-slate-700 leading-relaxed mb-4">
-                  After your initial response, you decide to pivot the activity. However, one participant says, "Can't we just finish what we started? I was actually getting into it," while another responds, "Yeah, but half of us are clearly over it."
+                  After your initial response, you decide to pivot the activity. However, one participant says, &quot;Can&apos;t we just finish what we started? I was actually getting into it,&quot; while another responds, &quot;Yeah, but half of us are clearly over it.&quot;
                 </p>
                 <p className="font-medium text-slate-800 mb-3">
                   How do you navigate these competing needs while maintaining group cohesion?
@@ -1755,7 +1751,7 @@ export default function LessonPage() {
                 {expandedAnswers.answer2 && (
                   <div className="mt-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
                     <p className="text-green-800 leading-relaxed">
-                      <strong>Honor both perspectives:</strong> "I hear both sides—some of you want to continue, others are ready for something different. Let's compromise: we'll wrap up this round in 3 minutes so everyone gets closure, then transition to something that re-energizes the whole group." This validates both viewpoints while maintaining your role as the decision-maker.
+                      <strong>Honor both perspectives:</strong> &quot;I hear both sides—some of you want to continue, others are ready for something different. Let&apos;s compromise: we&apos;ll wrap up this round in 3 minutes so everyone gets closure, then transition to something that re-energizes the whole group.&quot; This validates both viewpoints while maintaining your role as the decision-maker.
                     </p>
                   </div>
                 )}
@@ -1765,7 +1761,7 @@ export default function LessonPage() {
               <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 text-slate-900">Checkpoint 3: Mid-Course Correction</h3>
                 <p className="text-slate-700 leading-relaxed mb-4">
-                  You've implemented your compromise, but as you transition to the new activity, you realize you don't have all the materials you need. The group is looking at you expectantly, and you can sense some frustration starting to build.
+                  You&apos;ve implemented your compromise, but as you transition to the new activity, you realize you don&apos;t have all the materials you need. The group is looking at you expectantly, and you can sense some frustration starting to build.
                 </p>
                 <p className="font-medium text-slate-800 mb-3">
                   What do you do when your pivot plan hits an unexpected obstacle?
@@ -1787,7 +1783,7 @@ export default function LessonPage() {
                 {expandedAnswers.answer3 && (
                   <div className="mt-4 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-lg">
                     <p className="text-amber-800 leading-relaxed">
-                      <strong>Be transparent and collaborative:</strong> "Alright, plot twist—I'm missing some supplies for what I had planned. This happens sometimes! Let's put our heads together: what could we do with what we have right here?" Turn the obstacle into a group problem-solving opportunity. Your honesty models resilience and shows that adaptability is a strength, not a failure.
+                      <strong>Be transparent and collaborative:</strong> &quot;Alright, plot twist—I&apos;m missing some supplies for what I had planned. This happens sometimes! Let&apos;s put our heads together: what could we do with what we have right here?&quot; Turn the obstacle into a group problem-solving opportunity. Your honesty models resilience and shows that adaptability is a strength, not a failure.
                     </p>
                   </div>
                 )}
@@ -1819,7 +1815,7 @@ export default function LessonPage() {
                 {expandedAnswers.answer4 && (
                   <div className="mt-4 p-4 bg-purple-50 border-l-4 border-purple-500 rounded-lg">
                     <p className="text-purple-800 leading-relaxed">
-                      <strong>Connect to real-world application:</strong> "Let's talk about what just happened—we hit some bumps, adjusted course, and ended up somewhere different but good. What does this teach us about handling unexpected changes in our own lives? How did it feel when we shifted from following a plan to creating our own solution?" Help them see that flexibility and collaboration are transferable leadership skills.
+                      <strong>Connect to real-world application:</strong> &quot;Let&apos;s talk about what just happened—we hit some bumps, adjusted course, and ended up somewhere different but good. What does this teach us about handling unexpected changes in our own lives? How did it feel when we shifted from following a plan to creating our own solution?&quot; Help them see that flexibility and collaboration are transferable leadership skills.
                     </p>
                   </div>
                 )}
@@ -1828,7 +1824,7 @@ export default function LessonPage() {
               <div className="bg-slate-100 border border-slate-300 rounded-lg p-6 mt-8">
                 <h3 className="text-lg font-semibold mb-3 text-slate-900">Key Takeaway</h3>
                 <p className="text-slate-700 leading-relaxed">
-                  Effective decision-making in facilitation isn't about having a perfect plan—it's about staying present, reading the room, and adapting with confidence. When you model flexibility and collaborative problem-solving, you teach participants that challenges are opportunities for growth and creativity.
+                  Effective decision-making in facilitation isn&apos;t about having a perfect plan—it&apos;s about staying present, reading the room, and adapting with confidence. When you model flexibility and collaborative problem-solving, you teach participants that challenges are opportunities for growth and creativity.
                 </p>
               </div>
             </div>
@@ -1862,7 +1858,7 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-blue-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-blue-800">Practice Alignment:</strong> <span className="text-blue-700">Ask yourself, "Am I demonstrating the qualities I want participants to practice—like empathy, curiosity, and responsibility?"</span>
+                      <strong className="text-blue-800">Practice Alignment:</strong> <span className="text-blue-700">Ask yourself, &quot;Am I demonstrating the qualities I want participants to practice—like empathy, curiosity, and responsibility?&quot;</span>
                     </div>
                   </div>
                 </div>
@@ -1952,7 +1948,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-red-800 mb-2">Situation:</p>
-                    <p className="text-red-700 leading-relaxed">A facilitator tells the group, "Every voice matters here," but when a quieter participant starts sharing, they quickly move on to another speaker.</p>
+                    <p className="text-red-700 leading-relaxed">A facilitator tells the group, &quot;Every voice matters here,&quot; but when a quieter participant starts sharing, they quickly move on to another speaker.</p>
                   </div>
                   <div>
                     <p className="font-semibold text-red-800 mb-2">Practice Prompt:</p>
@@ -1960,7 +1956,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-red-100 p-4 rounded-lg">
                     <p className="font-semibold text-red-800 mb-2">Facilitator Practice:</p>
-                    <p className="text-red-700 leading-relaxed italic">Pause, give eye contact, and say, "Let's make sure we hear your full thought—please continue."</p>
+                    <p className="text-red-700 leading-relaxed italic">Pause, give eye contact, and say, &quot;Let&apos;s make sure we hear your full thought—please continue.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -1970,15 +1966,15 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-orange-800 mb-2">Situation:</p>
-                    <p className="text-orange-700 leading-relaxed">At the start of the program, the facilitator stresses, "We value punctuality," but they begin sessions late while chatting with other adults.</p>
+                    <p className="text-orange-700 leading-relaxed">At the start of the program, the facilitator stresses, &quot;We value punctuality,&quot; but they begin sessions late while chatting with other adults.</p>
                   </div>
                   <div>
                     <p className="font-semibold text-orange-800 mb-2">Practice Prompt:</p>
-                    <p className="text-orange-700 leading-relaxed">What could you do to model the expectation you've set?</p>
+                    <p className="text-orange-700 leading-relaxed">What could you do to model the expectation you&apos;ve set?</p>
                   </div>
                   <div className="bg-orange-100 p-4 rounded-lg">
                     <p className="font-semibold text-orange-800 mb-2">Facilitator Practice:</p>
-                    <p className="text-orange-700 leading-relaxed italic">Begin sessions on time, even if not everyone has arrived, and explain: "We'll respect our time together by starting promptly."</p>
+                    <p className="text-orange-700 leading-relaxed italic">Begin sessions on time, even if not everyone has arrived, and explain: &quot;We&apos;ll respect our time together by starting promptly.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -1988,7 +1984,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-yellow-800 mb-2">Situation:</p>
-                    <p className="text-yellow-700 leading-relaxed">A youth leads a game and forgets part of the instructions. The facilitator interrupts with corrections, even though they often say, "Mistakes are part of learning."</p>
+                    <p className="text-yellow-700 leading-relaxed">A youth leads a game and forgets part of the instructions. The facilitator interrupts with corrections, even though they often say, &quot;Mistakes are part of learning.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-yellow-800 mb-2">Practice Prompt:</p>
@@ -1996,7 +1992,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-yellow-100 p-4 rounded-lg">
                     <p className="font-semibold text-yellow-800 mb-2">Facilitator Practice:</p>
-                    <p className="text-yellow-700 leading-relaxed italic">Allow the youth to continue, then reflect: "I love how you kept going even when it wasn't perfect—that's what learning looks like."</p>
+                    <p className="text-yellow-700 leading-relaxed italic">Allow the youth to continue, then reflect: &quot;I love how you kept going even when it wasn&apos;t perfect—that&apos;s what learning looks like.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2006,7 +2002,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Situation:</p>
-                    <p className="text-green-700 leading-relaxed">A disagreement breaks out. The facilitator says, "We'll handle conflict with respect," but then raises their voice sharply to regain control.</p>
+                    <p className="text-green-700 leading-relaxed">A disagreement breaks out. The facilitator says, &quot;We&apos;ll handle conflict with respect,&quot; but then raises their voice sharply to regain control.</p>
                   </div>
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Practice Prompt:</p>
@@ -2014,7 +2010,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-green-100 p-4 rounded-lg">
                     <p className="font-semibold text-green-800 mb-2">Facilitator Practice:</p>
-                    <p className="text-green-700 leading-relaxed italic">Take a breath, lower your tone, and say: "Let's pause. Everyone deserves to be heard—we'll take turns."</p>
+                    <p className="text-green-700 leading-relaxed italic">Take a breath, lower your tone, and say: &quot;Let&apos;s pause. Everyone deserves to be heard—we&apos;ll take turns.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2024,7 +2020,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-blue-800 mb-2">Situation:</p>
-                    <p className="text-blue-700 leading-relaxed">A facilitator encourages, "Everyone's perspective matters," but they consistently call on the same 2–3 confident voices in the circle.</p>
+                    <p className="text-blue-700 leading-relaxed">A facilitator encourages, &quot;Everyone&apos;s perspective matters,&quot; but they consistently call on the same 2–3 confident voices in the circle.</p>
                   </div>
                   <div>
                     <p className="font-semibold text-blue-800 mb-2">Practice Prompt:</p>
@@ -2032,7 +2028,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-blue-100 p-4 rounded-lg">
                     <p className="font-semibold text-blue-800 mb-2">Facilitator Practice:</p>
-                    <p className="text-blue-700 leading-relaxed italic">Use a talking piece, random draw, or open the floor by inviting: "I'd love to hear from someone we haven't heard from yet."</p>
+                    <p className="text-blue-700 leading-relaxed italic">Use a talking piece, random draw, or open the floor by inviting: &quot;I&apos;d love to hear from someone we haven&apos;t heard from yet.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2047,7 +2043,7 @@ export default function LessonPage() {
           ) : lesson.id === 'strengthen-lead-by-example' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Authentic facilitation is about more than words — it's about communicating with honesty, calm, and transparency, even under pressure. By practicing these strategies, facilitators build trust, model respect, and keep group energy grounded and focused.
+                Authentic facilitation is about more than words — it&apos;s about communicating with honesty, calm, and transparency, even under pressure. By practicing these strategies, facilitators build trust, model respect, and keep group energy grounded and focused.
               </p>
 
               <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
@@ -2062,13 +2058,13 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-indigo-800">Use "I" Statements</strong> <span className="text-indigo-700">– Share your perspective without blame, reducing defensiveness and inviting understanding.</span>
+                      <strong className="text-indigo-800">Use &quot;I&quot; Statements</strong> <span className="text-indigo-700">– Share your perspective without blame, reducing defensiveness and inviting understanding.</span>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-indigo-800">Acknowledge Emotions</strong> <span className="text-indigo-700">– Recognize feelings (yours and participants') to create space for safety and trust.</span>
+                      <strong className="text-indigo-800">Acknowledge Emotions</strong> <span className="text-indigo-700">– Recognize feelings (yours and participants&apos;) to create space for safety and trust.</span>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -2175,7 +2171,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-emerald-800 mb-2">Situation:</p>
-                    <p className="text-emerald-700 leading-relaxed">During a discussion about bravery, a participant hesitates to share. The facilitator says quickly: "It's okay, just go ahead—tell us now." The participant looks down and stays quiet.</p>
+                    <p className="text-emerald-700 leading-relaxed">During a discussion about bravery, a participant hesitates to share. The facilitator says quickly: &quot;It&apos;s okay, just go ahead—tell us now.&quot; The participant looks down and stays quiet.</p>
                   </div>
                   <div>
                     <p className="font-semibold text-emerald-800 mb-2">Practice Prompt:</p>
@@ -2183,11 +2179,11 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-emerald-100 p-4 rounded-lg">
                     <p className="font-semibold text-emerald-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-emerald-700 leading-relaxed italic">"Take your time—we'd love to hear your thoughts when you're ready."</p>
+                    <p className="text-emerald-700 leading-relaxed italic">&quot;Take your time—we&apos;d love to hear your thoughts when you&apos;re ready.&quot;</p>
                   </div>
                   <div className="bg-emerald-100 p-4 rounded-lg mt-3">
                     <p className="font-semibold text-emerald-800 mb-2">Why it Works:</p>
-                    <p className="text-emerald-700 leading-relaxed">A calm tone and empathetic phrasing reduce pressure and show respect for the participant's pace.</p>
+                    <p className="text-emerald-700 leading-relaxed">A calm tone and empathetic phrasing reduce pressure and show respect for the participant&apos;s pace.</p>
                   </div>
                 </div>
               </div>
@@ -2219,7 +2215,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-purple-800 mb-2">Situation:</p>
-                    <p className="text-purple-700 leading-relaxed">A facilitator sends a parent message: "Reminder: Don't forget the session tomorrow. Bring the stuff." Several parents reply with confusion about what's required.</p>
+                    <p className="text-purple-700 leading-relaxed">A facilitator sends a parent message: &quot;Reminder: Don&apos;t forget the session tomorrow. Bring the stuff.&quot; Several parents reply with confusion about what&apos;s required.</p>
                   </div>
                   <div>
                     <p className="font-semibold text-purple-800 mb-2">Practice Prompt:</p>
@@ -2227,7 +2223,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-purple-100 p-4 rounded-lg">
                     <p className="font-semibold text-purple-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-purple-700 leading-relaxed italic">"Dear Parents, just a reminder that tomorrow's session begins at 6:00 PM. Please remind your child to bring their toolkit and journal. Thank you for your support!"</p>
+                    <p className="text-purple-700 leading-relaxed italic">&quot;Dear Parents, just a reminder that tomorrow&apos;s session begins at 6:00 PM. Please remind your child to bring their toolkit and journal. Thank you for your support!&quot;</p>
                   </div>
                   <div className="bg-purple-100 p-4 rounded-lg mt-3">
                     <p className="font-semibold text-purple-800 mb-2">Why it Works:</p>
@@ -2239,7 +2235,7 @@ export default function LessonPage() {
           ) : lesson.id === 'strengthen-nonverbal-awareness' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Strong communication doesn't happen by accident—it requires practice and intentional strategies. As a facilitator, your ability to stay genuine, clear, and adaptable helps participants feel safe, supported, and engaged.
+                Strong communication doesn&apos;t happen by accident—it requires practice and intentional strategies. As a facilitator, your ability to stay genuine, clear, and adaptable helps participants feel safe, supported, and engaged.
               </p>
 
               <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 rounded-lg p-6">
@@ -2266,7 +2262,7 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-teal-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-teal-800">Mirror Participant Energy</strong> <span className="text-teal-700">– Match the group's tone and pace to stay connected and responsive.</span>
+                      <strong className="text-teal-800">Mirror Participant Energy</strong> <span className="text-teal-700">– Match the group&apos;s tone and pace to stay connected and responsive.</span>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -2353,7 +2349,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-blue-800 mb-2">Parent Question:</p>
-                    <p className="text-blue-700 leading-relaxed">"I don't really understand what my child will be doing in this program. How is it different from school?"</p>
+                    <p className="text-blue-700 leading-relaxed">&quot;I don&apos;t really understand what my child will be doing in this program. How is it different from school?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-blue-800 mb-2">Practice Prompt:</p>
@@ -2361,7 +2357,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-blue-100 p-4 rounded-lg">
                     <p className="font-semibold text-blue-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-blue-700 leading-relaxed italic">"That's a great question. Our focus isn't academics—it's character and confidence building. Each week we explore a theme like self-awareness or courage through activities, discussions, and reflection. Parents play a key role by encouraging conversations at home."</p>
+                    <p className="text-blue-700 leading-relaxed italic">&quot;That&apos;s a great question. Our focus isn&apos;t academics—it&apos;s character and confidence building. Each week we explore a theme like self-awareness or courage through activities, discussions, and reflection. Parents play a key role by encouraging conversations at home.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2371,7 +2367,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Parent Concern:</p>
-                    <p className="text-green-700 leading-relaxed">"My daughter can't seem to stay focused. I'm worried she's disrupting the group."</p>
+                    <p className="text-green-700 leading-relaxed">&quot;My daughter can&apos;t seem to stay focused. I&apos;m worried she&apos;s disrupting the group.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Practice Prompt:</p>
@@ -2379,7 +2375,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-green-100 p-4 rounded-lg">
                     <p className="font-semibold text-green-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-green-700 leading-relaxed italic">"She brings a lot of energy and enthusiasm, which is a strength. We're practicing strategies to help her channel that energy into focus, and she's already making progress."</p>
+                    <p className="text-green-700 leading-relaxed italic">&quot;She brings a lot of energy and enthusiasm, which is a strength. We&apos;re practicing strategies to help her channel that energy into focus, and she&apos;s already making progress.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2389,7 +2385,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-amber-800 mb-2">Parent Question:</p>
-                    <p className="text-amber-700 leading-relaxed">"I don't hear much about what happens during sessions. How do I know what my child is learning?"</p>
+                    <p className="text-amber-700 leading-relaxed">&quot;I don&apos;t hear much about what happens during sessions. How do I know what my child is learning?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-amber-800 mb-2">Practice Prompt:</p>
@@ -2397,7 +2393,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-amber-100 p-4 rounded-lg">
                     <p className="font-semibold text-amber-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-amber-700 leading-relaxed italic">"I send short weekly updates with highlights from our sessions and tips for supporting learning at home. I'll make sure you're added to that list."</p>
+                    <p className="text-amber-700 leading-relaxed italic">&quot;I send short weekly updates with highlights from our sessions and tips for supporting learning at home. I&apos;ll make sure you&apos;re added to that list.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2407,7 +2403,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-purple-800 mb-2">Parent Concern:</p>
-                    <p className="text-purple-700 leading-relaxed">"My son says he feels left out sometimes. I'm worried he's not connecting with the group."</p>
+                    <p className="text-purple-700 leading-relaxed">&quot;My son says he feels left out sometimes. I&apos;m worried he&apos;s not connecting with the group.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-purple-800 mb-2">Practice Prompt:</p>
@@ -2415,7 +2411,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-purple-100 p-4 rounded-lg">
                     <p className="font-semibold text-purple-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-purple-700 leading-relaxed italic">"I hear your concern, and I want to understand more. Can you share what he's described to you? Together we can think of ways to help him feel more included."</p>
+                    <p className="text-purple-700 leading-relaxed italic">&quot;I hear your concern, and I want to understand more. Can you share what he&apos;s described to you? Together we can think of ways to help him feel more included.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2425,7 +2421,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-indigo-800 mb-2">Parent Question:</p>
-                    <p className="text-indigo-700 leading-relaxed">"What can I do at home to support what you're teaching here?"</p>
+                    <p className="text-indigo-700 leading-relaxed">&quot;What can I do at home to support what you&apos;re teaching here?&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-indigo-800 mb-2">Practice Prompt:</p>
@@ -2433,7 +2429,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-indigo-100 p-4 rounded-lg">
                     <p className="font-semibold text-indigo-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-indigo-700 leading-relaxed italic">"That's wonderful to hear. What strategies have worked well for you at home so far? We can build on those together to support his growth here."</p>
+                    <p className="text-indigo-700 leading-relaxed italic">&quot;That&apos;s wonderful to hear. What strategies have worked well for you at home so far? We can build on those together to support his growth here.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2443,7 +2439,7 @@ export default function LessonPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="font-semibold text-rose-800 mb-2">Parent Concern:</p>
-                    <p className="text-rose-700 leading-relaxed">"I really want to know more about what other kids are struggling with—just so I understand the group better."</p>
+                    <p className="text-rose-700 leading-relaxed">&quot;I really want to know more about what other kids are struggling with—just so I understand the group better.&quot;</p>
                   </div>
                   <div>
                     <p className="font-semibold text-rose-800 mb-2">Practice Prompt:</p>
@@ -2451,7 +2447,7 @@ export default function LessonPage() {
                   </div>
                   <div className="bg-rose-100 p-4 rounded-lg">
                     <p className="font-semibold text-rose-800 mb-2">Facilitator Practice Move:</p>
-                    <p className="text-rose-700 leading-relaxed italic">"I can't share details about other participants to protect their privacy. What I can do is share overall themes we're working on and specific ways your child is engaging and growing."</p>
+                    <p className="text-rose-700 leading-relaxed italic">&quot;I can&apos;t share details about other participants to protect their privacy. What I can do is share overall themes we&apos;re working on and specific ways your child is engaging and growing.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2480,7 +2476,7 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-pink-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-pink-800">Set Boundaries with Compassion</strong> <span className="text-pink-700">– Clarify your role and limits respectfully, while keeping focus on the child's support.</span>
+                      <strong className="text-pink-800">Set Boundaries with Compassion</strong> <span className="text-pink-700">– Clarify your role and limits respectfully, while keeping focus on the child&apos;s support.</span>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -2508,7 +2504,7 @@ export default function LessonPage() {
           ) : lesson.id === 'build-listening-strategies' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                As a facilitator, how you listen often matters more than what you say. Listening is more than eye contact or nodding—it's about creating a space where participants feel safe, valued, and understood. When you listen deeply, you build trust and open the door to authentic connection and growth.
+                As a facilitator, how you listen often matters more than what you say. Listening is more than eye contact or nodding—it&apos;s about creating a space where participants feel safe, valued, and understood. When you listen deeply, you build trust and open the door to authentic connection and growth.
               </p>
 
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
@@ -2532,20 +2528,20 @@ export default function LessonPage() {
                     <div className="w-2 h-2 rounded-full bg-amber-600 mt-2.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-amber-800 mb-1">Use Gentle Echoes & Invitations</p>
-                      <p className="text-amber-700 leading-relaxed">Reflect back feelings or key words ("Sounds like that was hard for you…") and ask questions that invite reflection instead of rushing to solve.</p>
+                      <p className="text-amber-700 leading-relaxed">Reflect back feelings or key words (&quot;Sounds like that was hard for you…&quot;) and ask questions that invite reflection instead of rushing to solve.</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4 text-blue-900">Ways to Show You're Listening</h3>
+                <h3 className="text-lg font-semibold mb-4 text-blue-900">Ways to Show You&apos;re Listening</h3>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-blue-600 mt-2.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-blue-800 mb-1">Brief Prompts</p>
-                      <p className="text-blue-700 leading-relaxed">Small cues like "Mm-hmm" or "And then?" encourage youth to keep sharing.</p>
+                      <p className="text-blue-700 leading-relaxed">Small cues like &quot;Mm-hmm&quot; or &quot;And then?&quot; encourage youth to keep sharing.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -2583,7 +2579,7 @@ export default function LessonPage() {
           ) : lesson.id === 'strengthen-listening-strategies' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                This activity helps you connect real facilitation scenarios with the listening strategies you've just learned. By practicing how to match facilitator responses to the right approach, you'll see how small choices—like waiting in silence, reflecting back feelings, or using open body language—make a big difference in building trust and safety.
+                This activity helps you connect real facilitation scenarios with the listening strategies you&apos;ve just learned. By practicing how to match facilitator responses to the right approach, you&apos;ll see how small choices—like waiting in silence, reflecting back feelings, or using open body language—make a big difference in building trust and safety.
               </p>
 
               <div className="bg-violet-50 border border-violet-200 rounded-lg p-6">
@@ -2597,14 +2593,14 @@ export default function LessonPage() {
                 <h3 className="text-lg font-semibold mb-4 text-teal-900">From Practice to Real Sessions</h3>
                 <div className="space-y-4 text-teal-800">
                   <p className="leading-relaxed">
-                    Effective listening becomes natural through intentional practice. Each time you pause before responding, choose to reflect back what you heard, or create space with silence, you're building the foundation for deeper connections with participants.
+                    Effective listening becomes natural through intentional practice. Each time you pause before responding, choose to reflect back what you heard, or create space with silence, you&apos;re building the foundation for deeper connections with participants.
                   </p>
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <div className="w-2 h-2 rounded-full bg-teal-600 mt-2.5 flex-shrink-0" />
                       <div>
                         <p className="font-semibold text-teal-800 mb-1">In the Moment</p>
-                        <p className="text-teal-700 leading-relaxed">Trust your instincts—if someone seems hesitant, try silence. If they're sharing something emotional, reflect back what you hear.</p>
+                        <p className="text-teal-700 leading-relaxed">Trust your instincts—if someone seems hesitant, try silence. If they&apos;re sharing something emotional, reflect back what you hear.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -2618,7 +2614,7 @@ export default function LessonPage() {
                       <div className="w-2 h-2 rounded-full bg-teal-600 mt-2.5 flex-shrink-0" />
                       <div>
                         <p className="font-semibold text-teal-800 mb-1">Creating Safety</p>
-                        <p className="text-teal-700 leading-relaxed">When participants feel truly heard, they're more likely to share authentically and engage deeply with the learning process.</p>
+                        <p className="text-teal-700 leading-relaxed">When participants feel truly heard, they&apos;re more likely to share authentically and engage deeply with the learning process.</p>
                       </div>
                     </div>
                   </div>
@@ -2635,11 +2631,11 @@ export default function LessonPage() {
                 <h3 className="text-lg font-semibold mb-4 text-orange-900">Closed-Ended Questions</h3>
                 <div className="space-y-3 text-orange-800">
                   <p className="leading-relaxed">
-                    Can be answered with a simple "yes" or "no," or a short fact. They are useful for quick checks, clarifying details, or confirming understanding.
+                    Can be answered with a simple &quot;yes&quot; or &quot;no,&quot; or a short fact. They are useful for quick checks, clarifying details, or confirming understanding.
                   </p>
                   <div className="bg-orange-100 border border-orange-300 rounded-lg p-4">
                     <p className="font-semibold text-orange-900 mb-2">Example:</p>
-                    <p className="text-orange-800 italic">"Did you bring your journal today?"</p>
+                    <p className="text-orange-800 italic">&quot;Did you bring your journal today?&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2652,7 +2648,7 @@ export default function LessonPage() {
                   </p>
                   <div className="bg-emerald-100 border border-emerald-300 rounded-lg p-4">
                     <p className="font-semibold text-emerald-900 mb-2">Example:</p>
-                    <p className="text-emerald-800 italic">"What part of today's activity felt most meaningful to you?"</p>
+                    <p className="text-emerald-800 italic">&quot;What part of today&apos;s activity felt most meaningful to you?&quot;</p>
                   </div>
                 </div>
               </div>
@@ -2682,7 +2678,7 @@ export default function LessonPage() {
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold mb-4 text-orange-900">Closed Questions</h3>
                   <p className="text-orange-800 leading-relaxed mb-4">
-                    Are answered with short responses—often "yes" or "no." They're helpful when you need clarity, to wrap up a discussion, or to keep focus tight.
+                    Are answered with short responses—often &quot;yes&quot; or &quot;no.&quot; They&apos;re helpful when you need clarity, to wrap up a discussion, or to keep focus tight.
                   </p>
                 </div>
 
@@ -2718,7 +2714,7 @@ export default function LessonPage() {
           ) : lesson.id === 'practice-group-dynamics' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Practice responding to common group dynamics challenges. Each scenario presents a real facilitation situation where you'll need to think quickly and respond with intention.
+                Practice responding to common group dynamics challenges. Each scenario presents a real facilitation situation where you&apos;ll need to think quickly and respond with intention.
               </p>
               
               <GroupDynamicsPracticeActivity />
@@ -2782,7 +2778,7 @@ export default function LessonPage() {
                   </div>
                   <div>
                     <p className="font-medium text-emerald-800 mb-2">Distractors & Tension –</p>
-                    <p className="text-emerald-700 leading-relaxed">Name what's happening, re-establish expectations, and guide the group back toward respect and connection.</p>
+                    <p className="text-emerald-700 leading-relaxed">Name what&apos;s happening, re-establish expectations, and guide the group back toward respect and connection.</p>
                   </div>
                 </div>
               </div>
@@ -2797,7 +2793,7 @@ export default function LessonPage() {
           ) : lesson.id === 'strengthen-group-dynamics' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Managing group dynamics isn't only about handling disruptions in the moment. Strong facilitators prepare with intention, read the energy of the room, and make thoughtful adjustments to keep participants engaged and emotionally safe.
+                Managing group dynamics isn&apos;t only about handling disruptions in the moment. Strong facilitators prepare with intention, read the energy of the room, and make thoughtful adjustments to keep participants engaged and emotionally safe.
               </p>
 
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
@@ -2844,7 +2840,7 @@ export default function LessonPage() {
               <div className="bg-teal-50 border border-teal-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-3 text-teal-900">Why it Matters:</h3>
                 <p className="text-teal-800 leading-relaxed">
-                  You won't get it perfect every time—but your ability to pause, pivot, and guide with intention is what creates space for real growth. Strong facilitation is less about fixing problems, and more about fostering flow, safety, and trust.
+                  You won&apos;t get it perfect every time—but your ability to pause, pivot, and guide with intention is what creates space for real growth. Strong facilitation is less about fixing problems, and more about fostering flow, safety, and trust.
                 </p>
               </div>
             </div>
@@ -2867,14 +2863,14 @@ export default function LessonPage() {
                   <div>
                     <h4 className="font-semibold text-emerald-800 mb-2">Careful Communication</h4>
                     <p className="text-emerald-700 leading-relaxed">
-                      Speak with warmth and clarity. Recognize effort as much as achievement, and validate feelings even when you can't solve the problem.
+                      Speak with warmth and clarity. Recognize effort as much as achievement, and validate feelings even when you can&apos;t solve the problem.
                     </p>
                   </div>
 
                   <div>
                     <h4 className="font-semibold text-emerald-800 mb-2">Confidentiality & Respect</h4>
                     <p className="text-emerald-700 leading-relaxed">
-                      Honor privacy by keeping what's shared in the circle safe (unless safety is at risk). Reinforce agreements about respect and confidentiality.
+                      Honor privacy by keeping what&apos;s shared in the circle safe (unless safety is at risk). Reinforce agreements about respect and confidentiality.
                     </p>
                   </div>
                 </div>
@@ -2945,7 +2941,7 @@ export default function LessonPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-green-900 mb-2">Scan for Inclusion</h3>
                       <ul className="space-y-1 text-green-800">
-                        <li>• Notice who's quiet, withdrawn, or left out.</li>
+                        <li>• Notice who&apos;s quiet, withdrawn, or left out.</li>
                         <li>• Intentionally invite them back into the circle.</li>
                       </ul>
                     </div>
@@ -2964,7 +2960,7 @@ export default function LessonPage() {
                           <span className="font-medium">Situation:</span> The group is waiting to begin, but the facilitator arrives late and frazzled. Participants look restless.
                         </p>
                         <p className="text-slate-700 leading-relaxed mb-3">
-                          <span className="font-medium">Trust Move:</span> Show up prepared and on time. Begin with calm presence: "Thanks for being ready to start. Here's how we'll spend our time today."
+                          <span className="font-medium">Trust Move:</span> Show up prepared and on time. Begin with calm presence: &quot;Thanks for being ready to start. Here&apos;s how we&apos;ll spend our time today.&quot;
                         </p>
                         <p className="text-slate-600 italic leading-relaxed">
                           <span className="font-medium">Why it Works:</span> Reliability creates predictability, and predictability makes youth feel safe.
@@ -2984,7 +2980,7 @@ export default function LessonPage() {
                           <span className="font-medium">Situation:</span> Halfway through a session, the facilitator suddenly changes the plan without explanation. The group looks confused.
                         </p>
                         <p className="text-slate-700 leading-relaxed mb-3">
-                          <span className="font-medium">Trust Move:</span> When shifting plans, explain the reason: "I know we were going to do journaling next, but the energy feels high—let's move into the game first, then circle back."
+                          <span className="font-medium">Trust Move:</span> When shifting plans, explain the reason: &quot;I know we were going to do journaling next, but the energy feels high—let&apos;s move into the game first, then circle back.&quot;
                         </p>
                         <p className="text-slate-600 italic leading-relaxed">
                           <span className="font-medium">Why it Works:</span> Clear transitions reduce uncertainty and maintain trust in your leadership.
@@ -3001,10 +2997,10 @@ export default function LessonPage() {
                       <div className="flex-1">
                         <h4 className="font-semibold text-slate-900 mb-2">Scenario 3 – Communicating with Care</h4>
                         <p className="text-slate-700 leading-relaxed mb-3">
-                          <span className="font-medium">Situation:</span> A participant struggles with an activity and says, "I'm no good at this."
+                          <span className="font-medium">Situation:</span> A participant struggles with an activity and says, &quot;I&apos;m no good at this.&quot;
                         </p>
                         <p className="text-slate-700 leading-relaxed mb-3">
-                          <span className="font-medium">Trust Move:</span> "I saw how much effort you put into that. Effort matters here as much as results. Want to try again together?"
+                          <span className="font-medium">Trust Move:</span> &quot;I saw how much effort you put into that. Effort matters here as much as results. Want to try again together?&quot;
                         </p>
                         <p className="text-slate-600 italic leading-relaxed">
                           <span className="font-medium">Why it Works:</span> Acknowledging effort validates the learner and encourages persistence.
@@ -3024,7 +3020,7 @@ export default function LessonPage() {
                           <span className="font-medium">Situation:</span> A participant shares something personal, and another makes a joking comment. The sharer looks hurt.
                         </p>
                         <p className="text-slate-700 leading-relaxed mb-3">
-                          <span className="font-medium">Trust Move:</span> Step in gently: "Let's pause—our agreement is that what's shared here is respected. Jokes can make people feel unsafe. Let's recommit to holding this space with care."
+                          <span className="font-medium">Trust Move:</span> Step in gently: &quot;Let&apos;s pause—our agreement is that what&apos;s shared here is respected. Jokes can make people feel unsafe. Let&apos;s recommit to holding this space with care.&quot;
                         </p>
                         <p className="text-slate-600 italic leading-relaxed">
                           <span className="font-medium">Why it Works:</span> Reinforcing confidentiality and respect rebuilds safety for the group.
@@ -3041,10 +3037,10 @@ export default function LessonPage() {
                       <div className="flex-1">
                         <h4 className="font-semibold text-slate-900 mb-2">Scenario 5 – Scanning for Inclusion</h4>
                         <p className="text-slate-700 leading-relaxed mb-3">
-                          <span className="font-medium">Situation:</span> During discussion, two participants dominate. A quieter participant hasn't spoken once.
+                          <span className="font-medium">Situation:</span> During discussion, two participants dominate. A quieter participant hasn&apos;t spoken once.
                         </p>
                         <p className="text-slate-700 leading-relaxed mb-3">
-                          <span className="font-medium">Trust Move:</span> "I'd like to hear from someone we haven't heard from yet—[Name], what's one thought you'd add?"
+                          <span className="font-medium">Trust Move:</span> &quot;I&apos;d like to hear from someone we haven&apos;t heard from yet—[Name], what&apos;s one thought you&apos;d add?&quot;
                         </p>
                         <p className="text-slate-600 italic leading-relaxed">
                           <span className="font-medium">Why it Works:</span> Intentionally drawing in quiet voices shows that every perspective is valued.
@@ -3058,7 +3054,7 @@ export default function LessonPage() {
           ) : lesson.id === 'strengthen-trust' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Trust isn't built only in reactive moments—it's something you design for. Strong facilitators shape spaces where trust is the norm, not the exception, by using structure, connection, and repair strategies intentionally. When trust is woven into your design, youth feel safe before they even speak.
+                Trust isn&apos;t built only in reactive moments—it&apos;s something you design for. Strong facilitators shape spaces where trust is the norm, not the exception, by using structure, connection, and repair strategies intentionally. When trust is woven into your design, youth feel safe before they even speak.
               </p>
 
               <div className="space-y-6">
@@ -3073,7 +3069,7 @@ export default function LessonPage() {
                   <div className="bg-blue-100 border border-blue-300 rounded-lg p-4">
                     <p className="font-semibold text-blue-900 mb-2">Example:</p>
                     <p className="text-blue-800 leading-relaxed">
-                      Every session starts with a two-minute check-in circle and ends with "one word to take away." Even if activities change, youth know the anchors are steady.
+                      Every session starts with a two-minute check-in circle and ends with &quot;one word to take away.&quot; Even if activities change, youth know the anchors are steady.
                     </p>
                   </div>
                 </div>
@@ -3089,7 +3085,7 @@ export default function LessonPage() {
                   <div className="bg-emerald-100 border border-emerald-300 rounded-lg p-4">
                     <p className="font-semibold text-emerald-900 mb-2">Example:</p>
                     <p className="text-emerald-800 leading-relaxed">
-                      Instead of jumping straight into an activity, begin with, "How's everyone doing today? Let's go around with one high or low from the week."
+                      Instead of jumping straight into an activity, begin with, &quot;How&apos;s everyone doing today? Let&apos;s go around with one high or low from the week.&quot;
                     </p>
                   </div>
                 </div>
@@ -3100,12 +3096,12 @@ export default function LessonPage() {
                     <h3 className="text-lg font-semibold text-purple-900">Normalize Emotion and Repair</h3>
                   </div>
                   <p className="text-purple-800 leading-relaxed mb-4">
-                    Trust doesn't mean there are no disruptions—it means challenges are met with care. By naming feelings, acknowledging missteps, and modeling repair, you teach youth that relationships can withstand bumps.
+                    Trust doesn&apos;t mean there are no disruptions—it means challenges are met with care. By naming feelings, acknowledging missteps, and modeling repair, you teach youth that relationships can withstand bumps.
                   </p>
                   <div className="bg-purple-100 border border-purple-300 rounded-lg p-4">
                     <p className="font-semibold text-purple-900 mb-2">Example:</p>
                     <p className="text-purple-800 leading-relaxed">
-                      If a tense moment arises, pause: "I see that felt frustrating. Let's take a breath together and reset so everyone feels safe."
+                      If a tense moment arises, pause: &quot;I see that felt frustrating. Let&apos;s take a breath together and reset so everyone feels safe.&quot;
                     </p>
                   </div>
                 </div>
@@ -3130,7 +3126,7 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2.5 flex-shrink-0"></div>
                     <div>
-                      <strong className="text-indigo-800">Fundamental Attribution Error</strong> <span className="text-indigo-700">– We often blame behavior on personality instead of considering situational factors. (Ex: A "disrespectful" participant might actually be tired, excluded, or overwhelmed.)</span>
+                      <strong className="text-indigo-800">Fundamental Attribution Error</strong> <span className="text-indigo-700">– We often blame behavior on personality instead of considering situational factors. (Ex: A &quot;disrespectful&quot; participant might actually be tired, excluded, or overwhelmed.)</span>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -3160,7 +3156,7 @@ export default function LessonPage() {
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-cyan-500 mt-2.5 flex-shrink-0"></div>
                     <div className="text-cyan-800">
-                      <span className="font-medium">Feeling flustered without the "right" answer</span> → fear of failure or performance pressure.
+                      <span className="font-medium">Feeling flustered without the &quot;right&quot; answer</span> → fear of failure or performance pressure.
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -3177,28 +3173,28 @@ export default function LessonPage() {
                   </div>
                 </div>
                 <p className="text-cyan-700 leading-relaxed mt-4 italic">
-                  These aren't flaws—they're insights. Awareness turns them into tools for growth.
+                  These aren&apos;t flaws—they&apos;re insights. Awareness turns them into tools for growth.
                 </p>
               </div>
 
               <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-3 text-emerald-900">Companion Practice – Journaling:</h3>
                 <p className="text-emerald-800 leading-relaxed">
-                  Journaling provides a safe way to track emotions, notice patterns, and uncover insights over time. It doesn't have to be polished—just honest.
+                  Journaling provides a safe way to track emotions, notice patterns, and uncover insights over time. It doesn&apos;t have to be polished—just honest.
                 </p>
               </div>
 
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-3 text-amber-900">Why it Matters:</h3>
                 <p className="text-amber-800 leading-relaxed">
-                  Self-awareness is a facilitator's superpower. When you reflect on your own inner world, you model vulnerability and authenticity, creating a culture where youth feel safe to do the same.
+                  Self-awareness is a facilitator&apos;s superpower. When you reflect on your own inner world, you model vulnerability and authenticity, creating a culture where youth feel safe to do the same.
                 </p>
               </div>
             </div>
           ) : lesson.id === 'practice-self-reflection' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Trust and presence as a facilitator start with noticing your own emotions. The Mirror Moments Map is a tool to help you reflect on emotional triggers, uncover what's beneath them, and reframe your response with intention.
+                Trust and presence as a facilitator start with noticing your own emotions. The Mirror Moments Map is a tool to help you reflect on emotional triggers, uncover what&apos;s beneath them, and reframe your response with intention.
               </p>
 
               <div className="bg-violet-50 border border-violet-200 rounded-lg p-6">
@@ -3248,10 +3244,10 @@ export default function LessonPage() {
                     <span className="font-semibold">Feeling:</span> I felt insecure about the lesson I was teaching.
                   </p>
                   <p className="text-emerald-800">
-                    <span className="font-semibold">Underneath:</span> I was afraid I didn't know what to say. I value being helpful.
+                    <span className="font-semibold">Underneath:</span> I was afraid I didn&apos;t know what to say. I value being helpful.
                   </p>
                   <p className="text-emerald-800">
-                    <span className="font-semibold">Reframe:</span> It's okay not to have the answer. Listening is enough.
+                    <span className="font-semibold">Reframe:</span> It&apos;s okay not to have the answer. Listening is enough.
                   </p>
                 </div>
                 <p className="text-emerald-700 leading-relaxed mt-4 italic">
@@ -3276,7 +3272,7 @@ export default function LessonPage() {
                     <span className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
                     <div>
                       <p className="font-semibold text-orange-900">Notice</p>
-                      <p className="text-orange-800">Name what you're feeling and any story running through your mind.</p>
+                      <p className="text-orange-800">Name what you&apos;re feeling and any story running through your mind.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -3292,8 +3288,8 @@ export default function LessonPage() {
                   <h4 className="font-semibold text-orange-900 mb-3">Example:</h4>
                   <div className="space-y-2">
                     <p className="text-orange-800"><span className="font-semibold">Pause:</span> deep breath.</p>
-                    <p className="text-orange-800"><span className="font-semibold">Notice:</span> "I feel flustered and unseen."</p>
-                    <p className="text-orange-800"><span className="font-semibold">Choose:</span> "I'm going to ask a clarifying question instead of reacting defensively."</p>
+                    <p className="text-orange-800"><span className="font-semibold">Notice:</span> &quot;I feel flustered and unseen.&quot;</p>
+                    <p className="text-orange-800"><span className="font-semibold">Choose:</span> &quot;I&apos;m going to ask a clarifying question instead of reacting defensively.&quot;</p>
                   </div>
                 </div>
               </div>
@@ -3308,7 +3304,7 @@ export default function LessonPage() {
           ) : lesson.id === 'strengthen-self-reflection' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Strong facilitation isn't about avoiding tough moments—it's about learning how to pause, reflect, and respond with intention when challenges arise. The Pause-Notice-Choose model is a simple framework to help you shift from reacting on autopilot to responding in alignment with your values.
+                Strong facilitation isn&apos;t about avoiding tough moments—it&apos;s about learning how to pause, reflect, and respond with intention when challenges arise. The Pause-Notice-Choose model is a simple framework to help you shift from reacting on autopilot to responding in alignment with your values.
               </p>
 
               <div className="bg-rose-50 border border-rose-200 rounded-lg p-6">
@@ -3325,7 +3321,7 @@ export default function LessonPage() {
                     <span className="flex-shrink-0 w-8 h-8 bg-rose-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
                     <div>
                       <p className="font-semibold text-rose-900">Notice</p>
-                      <p className="text-rose-800">Identify what you're feeling and what beliefs or biases might be underneath.</p>
+                      <p className="text-rose-800">Identify what you&apos;re feeling and what beliefs or biases might be underneath.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -3457,14 +3453,14 @@ export default function LessonPage() {
               <div className="bg-green-50 border border-green-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-3 text-green-900">Key Insight:</h3>
                 <p className="text-green-800 leading-relaxed">
-                  Bias doesn't mean you're a "bad facilitator." It means you're human. By becoming aware of biases and reflecting honestly, you create fairer, more inclusive spaces where all participants feel seen and valued.
+                  Bias doesn&apos;t mean you&apos;re a &quot;bad facilitator.&quot; It means you&apos;re human. By becoming aware of biases and reflecting honestly, you create fairer, more inclusive spaces where all participants feel seen and valued.
                 </p>
               </div>
             </div>
           ) : lesson.id === 'practice-bias-awareness' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Interrupting bias isn't about shaming yourself—it's about noticing and redirecting with intention so facilitation stays fair and inclusive.
+                Interrupting bias isn&apos;t about shaming yourself—it&apos;s about noticing and redirecting with intention so facilitation stays fair and inclusive.
               </p>
 
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
@@ -3488,14 +3484,14 @@ export default function LessonPage() {
                     <span className="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
                     <div>
                       <p className="font-semibold text-purple-900">Ask Reflective Questions</p>
-                      <p className="text-purple-800">Use prompts like "Whose voice isn't here yet?" to widen inclusion.</p>
+                      <p className="text-purple-800">Use prompts like &quot;Whose voice isn&apos;t here yet?&quot; to widen inclusion.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</span>
                     <div>
                       <p className="font-semibold text-purple-900">Repair When Needed</p>
-                      <p className="text-purple-800">Acknowledge missteps honestly: "Thanks for pointing that out—I'll do better next time."</p>
+                      <p className="text-purple-800">Acknowledge missteps honestly: &quot;Thanks for pointing that out—I&apos;ll do better next time.&quot;</p>
                     </div>
                   </div>
                 </div>
@@ -3535,7 +3531,7 @@ export default function LessonPage() {
                     <div>
                       <h4 className="font-semibold text-indigo-900 mb-2">Post-Session Debrief</h4>
                       <p className="text-indigo-800 leading-relaxed">
-                        After sessions, reflect or journal: Whose voices were amplified? Who didn't get airtime? What patterns repeated? These questions reveal where equity can grow.
+                        After sessions, reflect or journal: Whose voices were amplified? Who didn&apos;t get airtime? What patterns repeated? These questions reveal where equity can grow.
                       </p>
                     </div>
                   </div>
@@ -3572,7 +3568,7 @@ export default function LessonPage() {
           ) : lesson.id === 'build-inclusion-scanning' ? (
             <div className="space-y-6">
               <p className="text-slate-700 leading-relaxed">
-                Inclusion scanning means intentionally observing your group to ensure every participant is being seen, heard, and valued. It's about noticing who's included—and who might be left out.
+                Inclusion scanning means intentionally observing your group to ensure every participant is being seen, heard, and valued. It&apos;s about noticing who&apos;s included—and who might be left out.
               </p>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
@@ -3580,7 +3576,7 @@ export default function LessonPage() {
                 <ul className="space-y-3 text-blue-800">
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></span>
-                    <span>Who speaks often? Who hasn't spoken at all?</span>
+                    <span>Who speaks often? Who hasn&apos;t spoken at all?</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></span>
@@ -3588,7 +3584,7 @@ export default function LessonPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></span>
-                    <span>Who's consistently chosen for leadership or public praise?</span>
+                    <span>Who&apos;s consistently chosen for leadership or public praise?</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></span>
@@ -3641,7 +3637,7 @@ export default function LessonPage() {
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-2 h-2 bg-purple-500 rounded-full mt-2"></span>
                     <div>
-                      <strong>Open the Circle</strong> – Invite unheard voices: "I'd love to hear from someone we haven't heard yet." Pair-shares or small groups can create safety for quieter participants.
+                      <strong>Open the Circle</strong> – Invite unheard voices: &quot;I&apos;d love to hear from someone we haven&apos;t heard yet.&quot; Pair-shares or small groups can create safety for quieter participants.
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
@@ -3677,7 +3673,7 @@ export default function LessonPage() {
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-2 h-2 bg-teal-500 rounded-full mt-2"></span>
                     <div>
-                      <strong>Encourage Reflection & Feedback</strong> – Ask, "Did everyone feel they had a chance to contribute?" to improve future sessions.
+                      <strong>Encourage Reflection & Feedback</strong> – Ask, &quot;Did everyone feel they had a chance to contribute?&quot; to improve future sessions.
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
@@ -3692,7 +3688,7 @@ export default function LessonPage() {
               <div className="bg-rose-50 border border-rose-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-3 text-rose-900">Why it Matters:</h3>
                 <p className="text-rose-800 leading-relaxed">
-                  Inclusion isn't automatic—it takes ongoing attentiveness and adaptation. By noticing imbalances and responding in real time, facilitators create spaces where all voices are welcomed, valued, and heard.
+                  Inclusion isn&apos;t automatic—it takes ongoing attentiveness and adaptation. By noticing imbalances and responding in real time, facilitators create spaces where all voices are welcomed, valued, and heard.
                 </p>
               </div>
             </div>
@@ -3701,7 +3697,7 @@ export default function LessonPage() {
           ) : lesson.id === 'integration-reflection' ? (
             <div className="space-y-8">
               <p className="text-slate-700 leading-relaxed text-lg">
-                Over 18 phases, you've built, practiced, and strengthened the core competencies of effective facilitation. Each phase layered new skills, moving from awareness to practice to mastery.
+                Over 18 phases, you&apos;ve built, practiced, and strengthened the core competencies of effective facilitation. Each phase layered new skills, moving from awareness to practice to mastery.
               </p>
 
               <div className="grid gap-6">
@@ -3751,7 +3747,7 @@ export default function LessonPage() {
               <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-lg p-6">
                 <h3 className="text-xl font-bold mb-4 text-indigo-900">Final Insight:</h3>
                 <p className="text-indigo-800 leading-relaxed text-lg">
-                  Facilitation is both a skill and a presence. By combining structure with empathy, clarity with flexibility, and awareness with intentional action, you've developed the tools to create spaces where youth feel safe, valued, and empowered to grow.
+                  Facilitation is both a skill and a presence. By combining structure with empathy, clarity with flexibility, and awareness with intentional action, you&apos;ve developed the tools to create spaces where youth feel safe, valued, and empowered to grow.
                 </p>
               </div>
             </div>

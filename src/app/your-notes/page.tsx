@@ -227,7 +227,7 @@ export default function YourNotesPage() {
           <div className="space-y-8">
             {(() => {
               let currentSection = '';
-              return allNotes.map((note, index) => {
+              return allNotes.map((note) => {
                 const showSectionHeader = currentSection !== note.sectionTitle;
                 if (showSectionHeader) {
                   currentSection = note.sectionTitle;

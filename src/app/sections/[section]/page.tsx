@@ -743,7 +743,7 @@ export default function SectionPage() {
             </div>
           ) : (
             // Default layout for other modules
-            section.lessons.map((lesson, index) => {
+            section.lessons.map((lesson) => {
               const isCompleted = getLessonProgress(section.id, lesson.id);
               
               return (

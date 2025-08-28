@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
           { status: 401 }
         );
       }
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { message: 'Invalid access token' },
         { status: 401 }
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     try {
       const pdfBuffer = await readFile(pdfPath);
       
-      return new NextResponse(pdfBuffer, {
+      return new NextResponse(pdfBuffer as BodyInit, {
         headers: {
           'Content-Type': 'application/pdf',
           'Content-Disposition': `inline; filename="${pdfName}"`,
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
           'Expires': '0'
         },
       });
-    } catch (fileError) {
+    } catch {
       return NextResponse.json(
         { message: 'PDF file not found' },
         { status: 404 }
