@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { useNote } from '@/lib/store';
 
 interface StepBackSectionProps {
   question: string;
@@ -10,21 +11,20 @@ interface StepBackSectionProps {
 }
 
 export default function StepBackSection({ question, sectionId, lessonId }: StepBackSectionProps) {
+  const { note, updateNote } = useNote(sectionId, `${lessonId}-stepback`);
   const [reflection, setReflection] = useState('');
 
   const handleReflectionChange = (content: string) => {
     setReflection(content);
-    // Save to localStorage for persistence
-    localStorage.setItem(`stepback-${sectionId}-${lessonId}`, content);
+    updateNote(content);
   };
 
-  // Load saved reflection on component mount
+  // Load saved reflection when note changes
   useEffect(() => {
-    const saved = localStorage.getItem(`stepback-${sectionId}-${lessonId}`);
-    if (saved) {
-      setReflection(saved);
+    if (note) {
+      setReflection(note.content);
     }
-  }, [sectionId, lessonId]);
+  }, [note]);
 
   return (
     <div className="mb-8">

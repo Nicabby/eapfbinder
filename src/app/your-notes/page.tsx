@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import PagePaper from '@/components/PagePaper';
+import { stepBackQuestions } from '@/lib/stepBackQuestions';
 
 interface NoteEntry {
   key: string;
@@ -38,16 +39,27 @@ export default function YourNotesPage() {
               try {
                 const noteData = JSON.parse(content);
                 if (noteData.content && noteData.content.trim()) {
-                  // Check if this is a final thoughts note (ends with -final)
+                  // Check if this is a special note type
                   const isFinalNote = parts[1].endsWith('-final');
-                  const lessonId = isFinalNote ? parts[1].replace('-final', '') : parts[1];
+                  const isStepBackNote = parts[1].endsWith('-stepback');
+                  
+                  let lessonId = parts[1];
+                  let noteType: 'lesson' | 'final' | 'stepback' = 'lesson';
+                  
+                  if (isFinalNote) {
+                    lessonId = parts[1].replace('-final', '');
+                    noteType = 'final';
+                  } else if (isStepBackNote) {
+                    lessonId = parts[1].replace('-stepback', '');
+                    noteType = 'stepback';
+                  }
                   
                   notes.push({
                     key,
                     content: noteData.content.trim(),
                     section: parts[0],
                     lesson: lessonId,
-                    type: isFinalNote ? 'final' : 'lesson',
+                    type: noteType,
                     sectionTitle: formatSectionTitle(parts[0])
                   });
                 }
@@ -93,12 +105,25 @@ export default function YourNotesPage() {
         }
       }
       
-      // Sort notes by section and lesson
+      // Sort notes: stepback entries first, then by section and lesson
       notes.sort((a, b) => {
+        // Put stepback entries first
+        if (a.type === 'stepback' && b.type !== 'stepback') return -1;
+        if (b.type === 'stepback' && a.type !== 'stepback') return 1;
+        
+        // Then sort by section
         if (a.section !== b.section) {
           return a.section.localeCompare(b.section);
         }
-        return a.lesson.localeCompare(b.lesson);
+        
+        // Then by lesson
+        if (a.lesson !== b.lesson) {
+          return a.lesson.localeCompare(b.lesson);
+        }
+        
+        // Finally by note type (lesson, final, stepback)
+        const typeOrder = { 'lesson': 0, 'final': 1, 'stepback': 2 };
+        return typeOrder[a.type] - typeOrder[b.type];
       });
       
       setAllNotes(notes);
@@ -148,6 +173,15 @@ export default function YourNotesPage() {
         content += ' - Final Thoughts';
       }
       content += '\n' + '-'.repeat(40) + '\n';
+      
+      // Add reflection question for step back notes
+      if (note.type === 'stepback') {
+        const question = stepBackQuestions[`${note.section}-${note.lesson}`] || stepBackQuestions[note.lesson];
+        if (question) {
+          content += `REFLECTION QUESTION:\n${question}\n\nMY RESPONSE:\n`;
+        }
+      }
+      
       content += note.content + '\n\n';
     });
     
@@ -197,6 +231,16 @@ export default function YourNotesPage() {
         htmlContent += ' - Final Thoughts';
       }
       htmlContent += '</h3>';
+      
+      // Add reflection question for step back notes
+      if (note.type === 'stepback') {
+        const question = stepBackQuestions[`${note.section}-${note.lesson}`] || stepBackQuestions[note.lesson];
+        if (question) {
+          htmlContent += `<div style="background: #f3e8ff; padding: 15px; border-left: 4px solid #7c3aed; margin: 10px 0;">
+            <strong>Reflection Question:</strong><br><em>${question}</em></div>`;
+        }
+      }
+      
       htmlContent += `<div class="note-content">${note.content.replace(/\n/g, '<br>')}</div>`;
     });
     
@@ -261,18 +305,31 @@ export default function YourNotesPage() {
           <div className="space-y-8">
             {(() => {
               let currentSection = '';
+              let hasStepBackSection = false;
+              
               return allNotes.map((note) => {
-                const showSectionHeader = currentSection !== note.sectionTitle;
+                let sectionTitle = note.type === 'stepback' ? 'Step Back Journal' : note.sectionTitle;
+                const showSectionHeader = currentSection !== sectionTitle;
+                
+                // Track if we need to show step back section
+                if (note.type === 'stepback' && !hasStepBackSection) {
+                  hasStepBackSection = true;
+                }
+                
                 if (showSectionHeader) {
-                  currentSection = note.sectionTitle;
+                  currentSection = sectionTitle;
                 }
                 
                 return (
                   <div key={note.key}>
                     {showSectionHeader && (
                       <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-slate-800 border-b-2 border-slate-300 pb-2">
-                          {note.sectionTitle}
+                        <h2 className={`text-2xl font-bold pb-2 ${
+                          note.type === 'stepback' 
+                            ? 'text-purple-800 border-b-2 border-purple-300' 
+                            : 'text-slate-800 border-b-2 border-slate-300'
+                        }`}>
+                          {note.type === 'stepback' && '📝 '}{sectionTitle}
                         </h2>
                       </div>
                     )}
@@ -294,7 +351,20 @@ export default function YourNotesPage() {
                         </h3>
                       </div>
                       
-                      <div className="bg-slate-50 bg-opacity-90 p-4 border border-slate-200 rounded-lg">
+                      {note.type === 'stepback' && (
+                        <div className="bg-purple-50 p-4 border border-purple-200 rounded-lg mb-4">
+                          <p className="text-sm font-medium text-purple-800 mb-2">Reflection Question:</p>
+                          <p className="text-purple-700 leading-relaxed italic">
+                            {stepBackQuestions[`${note.section}-${note.lesson}`] || stepBackQuestions[note.lesson] || 'No question found for this lesson.'}
+                          </p>
+                        </div>
+                      )}
+                      
+                      <div className={`p-4 border rounded-lg ${
+                        note.type === 'stepback' 
+                          ? 'bg-purple-50 bg-opacity-50 border-purple-200' 
+                          : 'bg-slate-50 bg-opacity-90 border-slate-200'
+                      }`}>
                         <div className="whitespace-pre-wrap text-slate-700 leading-relaxed font-mono">
                           {note.content}
                         </div>
