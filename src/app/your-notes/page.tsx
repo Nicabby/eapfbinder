@@ -9,7 +9,7 @@ interface NoteEntry {
   content: string;
   section: string;
   lesson: string;
-  type: 'lesson' | 'stepback' | 'section';
+  type: 'lesson' | 'stepback' | 'section' | 'final';
   sectionTitle: string;
   timestamp?: number;
 }
@@ -38,12 +38,16 @@ export default function YourNotesPage() {
               try {
                 const noteData = JSON.parse(content);
                 if (noteData.content && noteData.content.trim()) {
+                  // Check if this is a final thoughts note (ends with -final)
+                  const isFinalNote = parts[1].endsWith('-final');
+                  const lessonId = isFinalNote ? parts[1].replace('-final', '') : parts[1];
+                  
                   notes.push({
                     key,
                     content: noteData.content.trim(),
                     section: parts[0],
-                    lesson: parts[1],
-                    type: 'lesson',
+                    lesson: lessonId,
+                    type: isFinalNote ? 'final' : 'lesson',
                     sectionTitle: formatSectionTitle(parts[0])
                   });
                 }
@@ -140,6 +144,8 @@ export default function YourNotesPage() {
       content += `${formatLessonTitle(note.lesson)}`;
       if (note.type === 'stepback') {
         content += ' - Step Back Reflection';
+      } else if (note.type === 'final') {
+        content += ' - Final Thoughts';
       }
       content += '\n' + '-'.repeat(40) + '\n';
       content += note.content + '\n\n';
@@ -187,6 +193,8 @@ export default function YourNotesPage() {
       htmlContent += `<h3>${formatLessonTitle(note.lesson)}`;
       if (note.type === 'stepback') {
         htmlContent += ' - Step Back Reflection';
+      } else if (note.type === 'final') {
+        htmlContent += ' - Final Thoughts';
       }
       htmlContent += '</h3>';
       htmlContent += `<div class="note-content">${note.content.replace(/\n/g, '<br>')}</div>`;
@@ -276,6 +284,11 @@ export default function YourNotesPage() {
                           {note.type === 'stepback' && (
                             <span className="ml-2 text-sm font-normal text-purple-600 bg-purple-100 px-2 py-1 rounded">
                               Step Back Reflection
+                            </span>
+                          )}
+                          {note.type === 'final' && (
+                            <span className="ml-2 text-sm font-normal text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                              Final Thoughts
                             </span>
                           )}
                         </h3>
