@@ -87,7 +87,7 @@ export default function YourNotesPage() {
             }
           }
         } else if (key.startsWith('stepback-')) {
-          // Step Back reflection notes: stepback-{section}-{lesson}
+          // Legacy Step Back reflection notes: stepback-{section}-{lesson}
           const parts = key.split('-');
           if (parts.length === 3) {
             const content = localStorage.getItem(key);
@@ -176,7 +176,7 @@ export default function YourNotesPage() {
       
       // Add reflection question for step back notes
       if (note.type === 'stepback') {
-        const question = stepBackQuestions[`${note.section}-${note.lesson}`] || stepBackQuestions[note.lesson];
+        const question = stepBackQuestions[note.lesson];
         if (question) {
           content += `REFLECTION QUESTION:\n${question}\n\nMY RESPONSE:\n`;
         }
@@ -234,7 +234,7 @@ export default function YourNotesPage() {
       
       // Add reflection question for step back notes
       if (note.type === 'stepback') {
-        const question = stepBackQuestions[`${note.section}-${note.lesson}`] || stepBackQuestions[note.lesson];
+        const question = stepBackQuestions[note.lesson];
         if (question) {
           htmlContent += `<div style="background: #f3e8ff; padding: 15px; border-left: 4px solid #7c3aed; margin: 10px 0;">
             <strong>Reflection Question:</strong><br><em>${question}</em></div>`;
@@ -355,7 +355,7 @@ export default function YourNotesPage() {
                         <div className="bg-purple-50 p-4 border border-purple-200 rounded-lg mb-4">
                           <p className="text-sm font-medium text-purple-800 mb-2">Reflection Question:</p>
                           <p className="text-purple-700 leading-relaxed italic">
-                            {stepBackQuestions[`${note.section}-${note.lesson}`] || stepBackQuestions[note.lesson] || 'No question found for this lesson.'}
+                            {stepBackQuestions[note.lesson] || 'No question found for this lesson.'}
                           </p>
                         </div>
                       )}
