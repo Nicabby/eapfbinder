@@ -6,13 +6,11 @@ import { cn } from '@/lib/utils';
 interface PagePaperProps {
   children: ReactNode;
   className?: string;
-  _showRings?: boolean;
 }
 
 export default function PagePaper({ 
   children, 
-  className, 
-  _showRings = true 
+  className 
 }: PagePaperProps) {
   return (
     <main className={cn('flex-1 relative min-h-screen bg-slate-50', className)}>

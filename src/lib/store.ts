@@ -66,7 +66,8 @@ export const useBinderStore = create<BinderStore>((set, get) => ({
   clearNote: (sectionId: string, lessonId: string) => {
     const key = createNoteKey(sectionId, lessonId);
     set(state => {
-      const { [key]: _removed, ...remainingNotes } = state.notes;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [key]: _, ...remainingNotes } = state.notes;
       return { notes: remainingNotes };
     });
     

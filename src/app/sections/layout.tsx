@@ -73,8 +73,14 @@ export default function SectionsLayout({
   const currentColors = getCurrentSectionColors();
 
   return (
-    <div className="flex min-h-screen" style={{ background: currentColors.transparent }}>
-      {/* Left Tab Rail */}
+    <div className="flex flex-col min-h-screen">
+      {/* Demo Banner */}
+      <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-3 px-4 text-sm font-medium shadow-lg">
+        🎯 <strong>DEMO VERSION</strong> - This is a sample of the EAP Facilitator Training Platform. Full functionality available in the complete version.
+      </div>
+      
+      <div className="flex flex-1" style={{ background: currentColors.transparent }}>
+        {/* Left Tab Rail */}
       <aside className="w-72 relative">
         {/* Binder Ring Divider */}
         <div className="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gray-300 via-gray-400 to-gray-300 rounded-full shadow-inner">
@@ -235,6 +241,7 @@ export default function SectionsLayout({
             {children}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
