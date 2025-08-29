@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import PagePaper from '@/components/PagePaper';
-import { stepBackQuestions } from '@/lib/stepBackQuestions';
 
 interface NoteEntry {
   key: string;
   content: string;
   section: string;
   lesson: string;
-  type: 'lesson' | 'stepback' | 'section' | 'final';
+  type: 'lesson' | 'final';
   sectionTitle: string;
   timestamp?: number;
 }
@@ -50,8 +49,8 @@ export default function YourNotesPage() {
                     lessonId = parts[1].replace('-final', '');
                     noteType = 'final';
                   } else if (isStepBackNote) {
-                    lessonId = parts[1].replace('-stepback', '');
-                    noteType = 'stepback';
+                    // Skip step back notes - they have their own page now
+                    return;
                   }
                   
                   notes.push({
@@ -87,31 +86,14 @@ export default function YourNotesPage() {
             }
           }
         } else if (key.startsWith('stepback-')) {
-          // Legacy Step Back reflection notes: stepback-{section}-{lesson}
-          const parts = key.split('-');
-          if (parts.length === 3) {
-            const content = localStorage.getItem(key);
-            if (content && content.trim()) {
-              notes.push({
-                key,
-                content: content.trim(),
-                section: parts[1],
-                lesson: parts[2],
-                type: 'stepback',
-                sectionTitle: formatSectionTitle(parts[1])
-              });
-            }
-          }
+          // Legacy Step Back reflection notes are now handled in the Step Back Journal page
+          continue;
         }
       }
       
-      // Sort notes: stepback entries first, then by section and lesson
+      // Sort notes by section and lesson
       notes.sort((a, b) => {
-        // Put stepback entries first
-        if (a.type === 'stepback' && b.type !== 'stepback') return -1;
-        if (b.type === 'stepback' && a.type !== 'stepback') return 1;
-        
-        // Then sort by section
+        // Sort by section
         if (a.section !== b.section) {
           return a.section.localeCompare(b.section);
         }
@@ -121,8 +103,8 @@ export default function YourNotesPage() {
           return a.lesson.localeCompare(b.lesson);
         }
         
-        // Finally by note type (lesson, final, stepback)
-        const typeOrder: Record<string, number> = { 'lesson': 0, 'final': 1, 'stepback': 2, 'section': 3 };
+        // Finally by note type (lesson first, then final)
+        const typeOrder: Record<string, number> = { 'lesson': 0, 'final': 1 };
         return typeOrder[a.type] - typeOrder[b.type];
       });
       
@@ -167,21 +149,10 @@ export default function YourNotesPage() {
       }
       
       content += `${formatLessonTitle(note.lesson)}`;
-      if (note.type === 'stepback') {
-        content += ' - Step Back Reflection';
-      } else if (note.type === 'final') {
+      if (note.type === 'final') {
         content += ' - Final Thoughts';
       }
       content += '\n' + '-'.repeat(40) + '\n';
-      
-      // Add reflection question for step back notes
-      if (note.type === 'stepback') {
-        const question = stepBackQuestions[note.lesson];
-        if (question) {
-          content += `REFLECTION QUESTION:\n${question}\n\nMY RESPONSE:\n`;
-        }
-      }
-      
       content += note.content + '\n\n';
     });
     
@@ -225,22 +196,10 @@ export default function YourNotesPage() {
       }
       
       htmlContent += `<h3>${formatLessonTitle(note.lesson)}`;
-      if (note.type === 'stepback') {
-        htmlContent += ' - Step Back Reflection';
-      } else if (note.type === 'final') {
+      if (note.type === 'final') {
         htmlContent += ' - Final Thoughts';
       }
       htmlContent += '</h3>';
-      
-      // Add reflection question for step back notes
-      if (note.type === 'stepback') {
-        const question = stepBackQuestions[note.lesson];
-        if (question) {
-          htmlContent += `<div style="background: #f3e8ff; padding: 15px; border-left: 4px solid #7c3aed; margin: 10px 0;">
-            <strong>Reflection Question:</strong><br><em>${question}</em></div>`;
-        }
-      }
-      
       htmlContent += `<div class="note-content">${note.content.replace(/\n/g, '<br>')}</div>`;
     });
     
@@ -305,31 +264,19 @@ export default function YourNotesPage() {
           <div className="space-y-8">
             {(() => {
               let currentSection = '';
-              let hasStepBackSection = false;
               
               return allNotes.map((note) => {
-                const sectionTitle = note.type === 'stepback' ? 'Step Back Journal' : note.sectionTitle;
-                const showSectionHeader = currentSection !== sectionTitle;
-                
-                // Track if we need to show step back section
-                if (note.type === 'stepback' && !hasStepBackSection) {
-                  hasStepBackSection = true;
-                }
-                
+                const showSectionHeader = currentSection !== note.sectionTitle;
                 if (showSectionHeader) {
-                  currentSection = sectionTitle;
+                  currentSection = note.sectionTitle;
                 }
                 
                 return (
                   <div key={note.key}>
                     {showSectionHeader && (
                       <div className="mb-6">
-                        <h2 className={`text-2xl font-bold pb-2 ${
-                          note.type === 'stepback' 
-                            ? 'text-purple-800 border-b-2 border-purple-300' 
-                            : 'text-slate-800 border-b-2 border-slate-300'
-                        }`}>
-                          {note.type === 'stepback' && '📝 '}{sectionTitle}
+                        <h2 className="text-2xl font-bold text-slate-800 border-b-2 border-slate-300 pb-2">
+                          {note.sectionTitle}
                         </h2>
                       </div>
                     )}
@@ -338,11 +285,6 @@ export default function YourNotesPage() {
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold text-slate-900">
                           {formatLessonTitle(note.lesson)}
-                          {note.type === 'stepback' && (
-                            <span className="ml-2 text-sm font-normal text-purple-600 bg-purple-100 px-2 py-1 rounded">
-                              Step Back Reflection
-                            </span>
-                          )}
                           {note.type === 'final' && (
                             <span className="ml-2 text-sm font-normal text-blue-600 bg-blue-100 px-2 py-1 rounded">
                               Final Thoughts
@@ -351,20 +293,7 @@ export default function YourNotesPage() {
                         </h3>
                       </div>
                       
-                      {note.type === 'stepback' && (
-                        <div className="bg-purple-50 p-4 border border-purple-200 rounded-lg mb-4">
-                          <p className="text-sm font-medium text-purple-800 mb-2">Reflection Question:</p>
-                          <p className="text-purple-700 leading-relaxed italic">
-                            {stepBackQuestions[note.lesson] || 'No question found for this lesson.'}
-                          </p>
-                        </div>
-                      )}
-                      
-                      <div className={`p-4 border rounded-lg ${
-                        note.type === 'stepback' 
-                          ? 'bg-purple-50 bg-opacity-50 border-purple-200' 
-                          : 'bg-slate-50 bg-opacity-90 border-slate-200'
-                      }`}>
+                      <div className="bg-slate-50 bg-opacity-90 p-4 border border-slate-200 rounded-lg">
                         <div className="whitespace-pre-wrap text-slate-700 leading-relaxed font-mono">
                           {note.content}
                         </div>

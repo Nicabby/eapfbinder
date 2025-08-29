@@ -162,7 +162,7 @@ export default function SectionsLayout({
           })}
           
           {/* Your Notes Tab */}
-          <div className="mt-4 pt-4 border-t border-gray-300">
+          <div className="mt-4 pt-4 border-t border-gray-300 space-y-1">
             <a
               href="/your-notes"
               className="block p-3 rounded-r-xl transition-all duration-200 border-l-4 hover:shadow-sm font-medium"
@@ -175,6 +175,21 @@ export default function SectionsLayout({
               <div className="text-sm leading-tight">📝 Your Notes</div>
               <div className="text-xs opacity-75 mt-1">
                 All your learning notes
+              </div>
+            </a>
+            
+            <a
+              href="/step-back-journal"
+              className="block p-3 rounded-r-xl transition-all duration-200 border-l-4 hover:shadow-sm font-medium"
+              style={{
+                backgroundColor: 'transparent',
+                borderLeftColor: '#7c3aed',
+                color: '#374151'
+              }}
+            >
+              <div className="text-sm leading-tight">🤔 Step Back Journal</div>
+              <div className="text-xs opacity-75 mt-1">
+                Reflection responses
               </div>
             </a>
           </div>
