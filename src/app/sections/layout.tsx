@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 interface Section {
   id: string;
@@ -93,10 +94,12 @@ export default function SectionsLayout({
         
         {/* EAP Logo - positioned to align with main title */}
         <div className="absolute top-4 left-12 right-4 text-center mb-6">
-          <img 
+          <Image 
             src="/NewLogoTrans.png" 
             alt="EAP Logo" 
-            className="w-[120px] h-[120px] mx-auto mb-1 object-contain"
+            width={120}
+            height={120}
+            className="mx-auto mb-1 object-contain"
           />
         </div>
         

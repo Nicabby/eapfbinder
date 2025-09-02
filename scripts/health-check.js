@@ -26,7 +26,7 @@ async function testUrl(url) {
       timeout: 5000
     }, (res) => {
       resolve({
-        url: testUrl,
+        url: url,
         status: res.statusCode,
         success: res.statusCode >= 200 && res.statusCode < 400
       });
@@ -34,7 +34,7 @@ async function testUrl(url) {
     
     req.on('error', (err) => {
       resolve({
-        url: testUrl,
+        url: url,
         status: 'ERROR',
         success: false,
         error: err.message
@@ -44,7 +44,7 @@ async function testUrl(url) {
     req.on('timeout', () => {
       req.destroy();
       resolve({
-        url: testUrl,
+        url: url,
         status: 'TIMEOUT',
         success: false,
         error: 'Request timeout'
@@ -61,8 +61,8 @@ async function runHealthCheck() {
   
   const results = [];
   
-  for (const testUrl of testUrls) {
-    const result = await testUrl(testUrl);
+  for (const url of testUrls) {
+    const result = await testUrl(url);
     results.push(result);
     
     const statusIcon = result.success ? '✅' : '❌';

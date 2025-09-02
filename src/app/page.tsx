@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function HomePage() {
   const router = useRouter();
@@ -10,10 +11,12 @@ export default function HomePage() {
       <div className="text-center max-w-2xl mx-auto p-8 -mt-12">
         {/* EAP Logo */}
         <div className="mb-4">
-          <img 
+          <Image 
             src="/NewLogoTrans.png" 
             alt="EAP Logo" 
-            className="mx-auto w-[240px] h-[240px] object-contain"
+            width={240}
+            height={240}
+            className="mx-auto object-contain"
           />
         </div>
         
