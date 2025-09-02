@@ -22,8 +22,9 @@ export default function YourNotesPage() {
     const loadAllNotes = () => {
       const notes: NoteEntry[] = [];
       
-      // Get all localStorage keys
-      for (let i = 0; i < localStorage.length; i++) {
+      try {
+        // Get all localStorage keys
+        for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (!key) continue;
         
@@ -50,7 +51,7 @@ export default function YourNotesPage() {
                     noteType = 'final';
                   } else if (isStepBackNote) {
                     // Skip step back notes - they have their own page now
-                    return;
+                    continue;
                   }
                   
                   notes.push({
@@ -89,6 +90,9 @@ export default function YourNotesPage() {
           // Legacy Step Back reflection notes are now handled in the Step Back Journal page
           continue;
         }
+        }
+      } catch (error) {
+        console.error('Error loading notes:', error);
       }
       
       // Sort notes by section and lesson
