@@ -1,41 +1,21 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useEffect } from 'react';
 
 export default function HomePage() {
   const router = useRouter();
 
+  useEffect(() => {
+    // Automatically redirect to leadership section
+    router.push('/sections/leadership');
+  }, [router]);
+
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#cdb48333' }}>
-      <div className="text-center max-w-2xl mx-auto p-8 -mt-12">
-        {/* EAP Logo */}
-        <div className="mb-4">
-          <Image 
-            src="/NewLogoTrans.png" 
-            alt="EAP Logo" 
-            width={240}
-            height={240}
-            className="mx-auto object-contain"
-          />
-        </div>
-        
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          EAP Facilitator Binder
-        </h1>
-        <p className="text-xl text-gray-600 mb-8">
-          A comprehensive development program<br />
-          for effective facilitation skills.
-        </p>
-        <button 
-          className="text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors duration-200"
-          style={{ backgroundColor: '#467edd' }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#467edd'}
-          onClick={() => router.push('/sections/orientation')}
-        >
-          Get Started
-        </button>
+      <div className="text-center max-w-2xl mx-auto p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style={{ borderColor: '#467edd' }}></div>
+        <p className="mt-4 text-gray-600">Redirecting to Leadership section...</p>
       </div>
     </div>
   );
