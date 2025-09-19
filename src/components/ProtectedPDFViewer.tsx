@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { X, Download, AlertCircle } from 'lucide-react';
 
 interface ProtectedPDFViewerProps {
   isOpen: boolean;
@@ -17,9 +17,23 @@ export default function ProtectedPDFViewer({
   pdfName
 }: ProtectedPDFViewerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [loadError, setLoadError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!isOpen) return;
+
+    // Reset states when opening
+    setLoadError(false);
+    setIsLoading(true);
+
+    // Set a timeout to detect if iframe fails to load
+    const loadTimeout = setTimeout(() => {
+      if (isLoading) {
+        setLoadError(true);
+        setIsLoading(false);
+      }
+    }, 10000); // 10 second timeout
 
     // Disable print functionality
     const disablePrint = () => {
@@ -86,6 +100,7 @@ export default function ProtectedPDFViewer({
     const cleanup = disablePrint();
 
     return () => {
+      clearTimeout(loadTimeout);
       if (cleanup) cleanup();
     };
   }, [isOpen]);
@@ -111,29 +126,70 @@ export default function ProtectedPDFViewer({
 
         {/* PDF Viewer */}
         <div className="flex-1 relative">
-          <iframe
-            ref={iframeRef}
-            src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
-            className="w-full h-full border-0"
-            title={pdfName}
-            style={{
-              // Additional security styles
-              userSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              msUserSelect: 'none'
-            }}
-          />
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading protected document...</p>
+              </div>
+            </div>
+          )}
 
-          {/* Print blocking overlay - invisible but captures events */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'transparent',
-              zIndex: 1
-            }}
-            onContextMenu={(e) => e.preventDefault()}
-          />
+          {loadError ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+              <div className="text-center max-w-md mx-auto p-6">
+                <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Unable to display PDF in viewer
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  The PDF cannot be displayed inline. Click below to download and view in your default PDF viewer.
+                </p>
+                <a
+                  href={pdfUrl}
+                  download={pdfName}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  <Download className="h-4 w-4" />
+                  Download {pdfName}
+                </a>
+                <p className="text-xs text-red-600 mt-3">
+                  Remember: This document is protected and cannot be printed.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <iframe
+                ref={iframeRef}
+                src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
+                className="w-full h-full border-0"
+                title={pdfName}
+                style={{
+                  // Additional security styles
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none'
+                }}
+                onLoad={() => setIsLoading(false)}
+                onError={() => {
+                  setLoadError(true);
+                  setIsLoading(false);
+                }}
+              />
+
+              {/* Print blocking overlay - invisible but captures events */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'transparent',
+                  zIndex: 1
+                }}
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </>
+          )}
         </div>
 
         {/* Footer */}
