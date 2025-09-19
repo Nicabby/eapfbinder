@@ -76,11 +76,6 @@ export default function ResourcePackagesPage() {
     }).filter(item => item.totalResources > 0);
   };
 
-  const downloadAllForSection = (sectionId: string, sectionTitle: string) => {
-    // This would typically create a zip file or batch download
-    // For now, we'll show an alert about the functionality
-    alert(`Download all resources for ${sectionTitle} - This feature would create a password-protected zip file with all section resources. Password: EAPF2025`);
-  };
 
   if (loading) {
     return (
@@ -134,32 +129,20 @@ export default function ResourcePackagesPage() {
                   className="p-6 rounded-t-lg border-b border-gray-200"
                   style={{ backgroundColor: section.color + '10' }}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className="p-3 rounded-lg"
-                        style={{ backgroundColor: section.color + '20' }}
-                      >
-                        <IconComponent className="h-6 w-6" style={{ color: section.color }} />
-                      </div>
-                      <div>
-                        <h2 className="text-xl font-semibold text-gray-800">{section.title}</h2>
-                        <p className="text-gray-600 text-sm mt-1">{section.description}</p>
-                        <p className="text-gray-500 text-xs mt-1">
-                          {totalResources} resource{totalResources !== 1 ? 's' : ''} available
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Download All Button */}
-                    <button
-                      onClick={() => downloadAllForSection(section.id, section.title)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white hover:opacity-90 transition-opacity duration-200"
-                      style={{ backgroundColor: section.color }}
+                  <div className="flex items-center gap-4">
+                    <div
+                      className="p-3 rounded-lg"
+                      style={{ backgroundColor: section.color + '20' }}
                     >
-                      <Package className="h-4 w-4" />
-                      Download All
-                    </button>
+                      <IconComponent className="h-6 w-6" style={{ color: section.color }} />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-800">{section.title}</h2>
+                      <p className="text-gray-600 text-sm mt-1">{section.description}</p>
+                      <p className="text-gray-500 text-xs mt-1">
+                        {totalResources} resource{totalResources !== 1 ? 's' : ''} available
+                      </p>
+                    </div>
                   </div>
                 </div>
 
