@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Define password configuration for different PDFs
 const PDF_PASSWORDS: Record<string, string> = {
-  'EAPFacilitatorSyllabus.pdf': 'EAP2025',
-  'CompetencyFrameworkGuide.pdf': 'EAP2025',
-  'Communication Resource Package.pdf': 'EAP2025',
-  'Effective Listening Resource Package.pdf': 'EAP2025',
-  'Equity and Inclusion Resource Package.pdf': 'EAP2025',
-  'Leadership Resource Package.pdf': 'EAP2025',
-  'Relationship Building Resource Package.pdf': 'EAP2025',
-  'Self-Reflection Resource Package.pdf': 'EAP2025',
-  'STEP BACK JOURNAL.pdf': 'EAP2025',
+  'EAPFacilitatorSyllabus.pdf': 'EAPF2025',
+  'CompetencyFrameworkGuide.pdf': 'EAPF2025',
+  'Communication Resource Package.pdf': 'EAPF2025',
+  'Effective Listening Resource Package.pdf': 'EAPF2025',
+  'Equity and Inclusion Resource Package.pdf': 'EAPF2025',
+  'Leadership Resource Package.pdf': 'EAPF2025',
+  'Relationship Building Resource Package.pdf': 'EAPF2025',
+  'Self-Reflection Resource Package.pdf': 'EAPF2025',
+  'STEP BACK JOURNAL.pdf': 'EAPF2025',
 };
 
 export async function POST(request: NextRequest) {

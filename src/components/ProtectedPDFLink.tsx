@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import PDFPasswordPrompt from './PDFPasswordPrompt';
+import ProtectedPDFViewer from './ProtectedPDFViewer';
 
 interface ProtectedPDFLinkProps {
   href: string;
@@ -11,6 +12,8 @@ interface ProtectedPDFLinkProps {
 
 export default function ProtectedPDFLink({ href, children, className }: ProtectedPDFLinkProps) {
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [showPDFViewer, setShowPDFViewer] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,9 +53,11 @@ export default function ProtectedPDFLink({ href, children, className }: Protecte
     .then(response => response.json())
     .then(data => {
       if (data.success && data.accessToken) {
-        // Open PDF with access token
+        // Open PDF in protected viewer
         const protectedUrl = `/api/protected-pdf?pdf=${encodeURIComponent(pdfName)}&token=${encodeURIComponent(data.accessToken)}`;
-        window.open(protectedUrl, '_blank', 'noopener,noreferrer');
+        setPdfUrl(protectedUrl);
+        setShowPDFViewer(true);
+        setShowPasswordPrompt(false);
       } else {
         console.error('Failed to get access token:', data.message);
       }
@@ -78,6 +83,16 @@ export default function ProtectedPDFLink({ href, children, className }: Protecte
         isOpen={showPasswordPrompt}
         onClose={() => setShowPasswordPrompt(false)}
         onSuccess={handlePasswordSuccess}
+        pdfName={href.split('/').pop() || ''}
+      />
+
+      <ProtectedPDFViewer
+        isOpen={showPDFViewer}
+        onClose={() => {
+          setShowPDFViewer(false);
+          setPdfUrl('');
+        }}
+        pdfUrl={pdfUrl}
         pdfName={href.split('/').pop() || ''}
       />
     </>

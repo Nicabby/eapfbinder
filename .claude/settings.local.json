@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npx vercel:*)",
+      "Bash(git pull:*)",
+      "Read(C:\\Users\\nicab/**)",
+      "Read(C:\\c\\Users\\nicab/**)",
+      "Read(C:\\c\\Users\\nicab\\binder/**)",
+      "Bash(git reset:*)",
+      "Bash(git remote set-url:*)",
+      "WebFetch(domain:eapfbinder.vercel.app)",
+      "Bash(curl:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:eapfbinder-pzdk92ofe-nicole-tals-projects.vercel.app)",
+      "Read(C:\\c\\Users\\nicab/**)",
+      "Read(C:\\c\\Users\\nicab/**)",
+      "Read(C:\\c\\Users\\nicab/**)",
+      "Read(C:\\c\\Users\\nicab/**)",
+      "WebFetch(domain:bindersample.vercel.app)",
+      "Bash(npm run dev:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

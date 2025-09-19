@@ -195,6 +195,21 @@ export default function SectionsLayout({
                 Reflection responses
               </div>
             </a>
+
+            <a
+              href="/resource-packages"
+              className="block p-3 rounded-r-xl transition-all duration-200 border-l-4 hover:shadow-sm font-medium"
+              style={{
+                backgroundColor: 'transparent',
+                borderLeftColor: '#059669',
+                color: '#374151'
+              }}
+            >
+              <div className="text-sm leading-tight">📦 Resource Packages</div>
+              <div className="text-xs opacity-75 mt-1">
+                Module downloads
+              </div>
+            </a>
           </div>
         </div>
       </aside>

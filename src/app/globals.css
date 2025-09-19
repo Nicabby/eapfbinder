@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Print protection - hide everything when printing */
+@media print {
+  * {
+    display: none !important;
+  }
+
+  body::before {
+    content: "This document is protected and cannot be printed." !important;
+    display: block !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    color: red !important;
+    text-align: center !important;
+    z-index: 9999 !important;
+  }
+}
