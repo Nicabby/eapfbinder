@@ -210,6 +210,21 @@ export default function SectionsLayout({
                 Module downloads
               </div>
             </a>
+
+            <a
+              href="/generate-pdf"
+              className="block p-3 rounded-r-xl transition-all duration-200 border-l-4 hover:shadow-sm font-medium"
+              style={{
+                backgroundColor: 'transparent',
+                borderLeftColor: '#dc2626',
+                color: '#374151'
+              }}
+            >
+              <div className="text-sm leading-tight">📄 Generate PDF Binder</div>
+              <div className="text-xs opacity-75 mt-1">
+                Complete binder export
+              </div>
+            </a>
           </div>
         </div>
       </aside>

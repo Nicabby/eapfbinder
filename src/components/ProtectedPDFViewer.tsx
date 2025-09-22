@@ -84,7 +84,7 @@ export default function ProtectedPDFViewer({
               alert('Printing is disabled for this document.');
             };
           }
-        } catch (e) {
+        } catch {
           // Cross-origin restrictions prevent access
           console.log('Cannot access iframe content due to cross-origin restrictions');
         }
@@ -103,7 +103,7 @@ export default function ProtectedPDFViewer({
       clearTimeout(loadTimeout);
       if (cleanup) cleanup();
     };
-  }, [isOpen]);
+  }, [isOpen, isLoading]);
 
   if (!isOpen) return null;
 
