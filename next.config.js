@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Fix workspace root warning
+  outputFileTracingRoot: __dirname,
   experimental: {
     // Reduce CPU usage to avoid Jest worker issues
     cpus: 1
