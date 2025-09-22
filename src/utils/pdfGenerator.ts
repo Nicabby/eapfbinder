@@ -193,7 +193,7 @@ export class BinderPDFGenerator {
           this.addBulletPoints(lesson.strategies);
         }
 
-        if (lesson.resources?.length > 0) {
+        if (lesson.resources && lesson.resources.length > 0) {
           this.addTitle('Resources', 3);
           lesson.resources.forEach(resource => {
             this.addText(`• ${resource.label}${resource.category ? ` (${resource.category})` : ''}`, 11);
