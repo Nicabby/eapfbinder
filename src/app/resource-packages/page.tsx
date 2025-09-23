@@ -90,7 +90,7 @@ export default function ResourcePackagesPage() {
   const resourceSections = getAllResources();
 
   return (
-    <PagePaper>
+    <PagePaper pageTitle="Resource Packages">
       <div className="max-w-4xl mx-auto">
         {/* Page Header */}
         <div className="border-b-2 border-emerald-200 pb-6 mb-8">

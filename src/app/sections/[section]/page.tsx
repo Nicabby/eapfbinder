@@ -96,7 +96,7 @@ export default function SectionPage() {
   }
 
   return (
-    <PagePaper>
+    <PagePaper pageTitle={section.title}>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">

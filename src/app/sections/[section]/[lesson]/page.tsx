@@ -1086,7 +1086,7 @@ export default function LessonPage() {
   }
 
   return (
-    <PagePaper>
+    <PagePaper pageTitle={`${section.title} - ${lesson.title}`}>
       <div className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-slate-500 mb-8">

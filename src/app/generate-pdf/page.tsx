@@ -24,7 +24,7 @@ export default function GeneratePDFPage() {
   };
 
   return (
-    <PagePaper>
+    <PagePaper pageTitle="Generate PDF Binder" showPrintButton={false}>
       <div className="max-w-2xl mx-auto text-center">
         {/* Header */}
         <div className="mb-8">
