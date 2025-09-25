@@ -62,6 +62,12 @@ export class BinderPDFGenerator {
     this.doc.setFontSize(fontSize);
     this.doc.setFont('helvetica', isBold ? 'bold' : (isItalic ? 'italic' : 'normal'));
 
+    // Check if text contains bullet points and handle them specially
+    if (text.includes('•') || text.includes('\n•')) {
+      this.addFormattedText(text, fontSize, isBold, isItalic);
+      return;
+    }
+
     const lines = this.doc.splitTextToSize(text, this.contentWidth);
     const lineHeight = fontSize * 0.4;
 
@@ -90,9 +96,92 @@ export class BinderPDFGenerator {
 
   private addBulletPoints(points: string[]): void {
     points.forEach(point => {
-      this.addText(`• ${point}`, 11);
+      this.addBulletPoint(point, 11);
     });
     this.currentY += 5;
+  }
+
+  private addBulletPoint(text: string, fontSize: number = 11, indent: number = 0): void {
+    this.doc.setFontSize(fontSize);
+    this.doc.setFont('helvetica', 'normal');
+
+    const bulletIndent = this.margin + indent;
+    const textIndent = bulletIndent + 8; // Space after bullet
+    // Fix: Ensure we don't exceed page boundaries by accounting for text indent
+    const availableWidth = this.pageWidth - textIndent - this.margin;
+
+    const lines = this.doc.splitTextToSize(text, availableWidth);
+    const lineHeight = fontSize * 0.4;
+
+    this.addNewPageIfNeeded(lines.length * lineHeight + 5);
+
+    // Add bullet point
+    this.doc.text('•', bulletIndent, this.currentY);
+
+    // Add text with proper indentation
+    this.doc.text(lines, textIndent, this.currentY);
+    this.currentY += lines.length * lineHeight + 3;
+  }
+
+  private addFormattedText(text: string, fontSize: number = 11, isBold: boolean = false, isItalic: boolean = false): void {
+    const paragraphs = text.split('\n\n');
+
+    paragraphs.forEach((paragraph, index) => {
+      if (paragraph.trim().startsWith('•')) {
+        // Handle bullet points
+        const bulletLines = paragraph.split('\n');
+        bulletLines.forEach(line => {
+          const trimmedLine = line.trim();
+          if (trimmedLine.startsWith('•')) {
+            // Remove the bullet symbol and add with proper formatting
+            const bulletText = trimmedLine.substring(1).trim();
+            this.addBulletPoint(bulletText, fontSize);
+          } else if (trimmedLine) {
+            // Continuation of previous bullet point
+            this.addBulletPoint(trimmedLine, fontSize, 8);
+          }
+        });
+      } else if (paragraph.trim()) {
+        // Handle regular paragraphs
+        this.doc.setFontSize(fontSize);
+        this.doc.setFont('helvetica', isBold ? 'bold' : (isItalic ? 'italic' : 'normal'));
+
+        const lines = this.doc.splitTextToSize(paragraph.trim(), this.contentWidth);
+        const lineHeight = fontSize * 0.4;
+
+        this.addNewPageIfNeeded(lines.length * lineHeight + 5);
+
+        this.doc.text(lines, this.margin, this.currentY);
+        this.currentY += lines.length * lineHeight + 5;
+      }
+
+      // Add space between paragraphs (except for the last one)
+      if (index < paragraphs.length - 1) {
+        this.currentY += 3;
+      }
+    });
+  }
+
+  private addNumberedItem(number: string, text: string, fontSize: number = 11, isBold: boolean = false, indent: number = 0): void {
+    this.doc.setFontSize(fontSize);
+    this.doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+
+    const numberIndent = this.margin + indent;
+    const textIndent = numberIndent + 20; // Space after number
+    // Fix: Ensure we don't exceed page boundaries by accounting for text indent
+    const availableWidth = this.pageWidth - textIndent - this.margin;
+
+    const lines = this.doc.splitTextToSize(text, availableWidth);
+    const lineHeight = fontSize * 0.4;
+
+    this.addNewPageIfNeeded(lines.length * lineHeight + 5);
+
+    // Add number
+    this.doc.text(`${number}`, numberIndent, this.currentY);
+
+    // Add text with proper indentation
+    this.doc.text(lines, textIndent, this.currentY);
+    this.currentY += lines.length * lineHeight + 3;
   }
 
   private addTableOfContents(courseData: CourseData): void {
@@ -102,12 +191,10 @@ export class BinderPDFGenerator {
     // Page numbers would be handled here if needed
 
     courseData.sections.forEach((section, sectionIndex) => {
-      this.addText(`${sectionIndex + 1}. ${section.title}`, 12, true);
-      this.currentY += 3;
+      this.addNumberedItem(`${sectionIndex + 1}`, section.title, 12, true);
 
       section.lessons.forEach((lesson, lessonIndex) => {
-        this.addText(`   ${sectionIndex + 1}.${lessonIndex + 1} ${lesson.title}`, 11);
-        this.currentY += 2;
+        this.addNumberedItem(`${sectionIndex + 1}.${lessonIndex + 1}`, lesson.title, 11, false, 15);
       });
 
       this.currentY += 5;
