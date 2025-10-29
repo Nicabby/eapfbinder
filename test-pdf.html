@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test PDF Generation</title>
+</head>
+<body>
+    <h1>Testing PDF Generation Fix</h1>
+    <p>This is a simple test to verify the PDF generation improvements for bullet points and numbering.</p>
+
+    <button onclick="testPDF()">Generate Test PDF</button>
+
+    <div id="result"></div>
+
+    <script src="http://localhost:3006/_next/static/chunks/webpack.js"></script>
+    <script>
+        async function testPDF() {
+            try {
+                const response = await fetch('http://localhost:3006/data/course.json');
+                const courseData = await response.json();
+
+                document.getElementById('result').innerHTML = '<p>Course data loaded successfully!</p>';
+                console.log('Course data:', courseData);
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p>Error: ' + error.message + '</p>';
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

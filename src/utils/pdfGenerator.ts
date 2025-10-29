@@ -291,12 +291,81 @@ export class BinderPDFGenerator {
         this.currentY += 10;
       });
 
-      // Add some space between sections
-      this.currentY += 15;
+      // Add page break after each section (except the last one)
+      if (sectionIndex < courseData.sections.length - 1) {
+        this.doc.addPage();
+        this.currentY = this.margin;
+      }
     });
 
     // Save the PDF
     this.doc.save('EAP_Facilitator_Development_Binder.pdf');
+  }
+
+  public async generateSectionPDF(courseData: CourseData, sectionId: string): Promise<void> {
+    const section = courseData.sections.find(s => s.id === sectionId);
+    if (!section) {
+      throw new Error(`Section with ID ${sectionId} not found`);
+    }
+
+    const sectionIndex = courseData.sections.findIndex(s => s.id === sectionId);
+
+    // Simple cover for individual section
+    this.addTitle(section.title, 1);
+    this.addText(section.description, 12);
+    this.currentY += 20;
+
+    // Module introduction if available
+    if (section.moduleIntroduction) {
+      this.addTitle('Module Introduction', 3);
+      this.addText(section.moduleIntroduction.summary, 11);
+      this.currentY += 5;
+
+      if (section.moduleIntroduction.learningObjectives?.length > 0) {
+        this.addTitle('Learning Objectives', 3);
+        this.addBulletPoints(section.moduleIntroduction.learningObjectives);
+      }
+
+      if (section.moduleIntroduction.lessonOutline) {
+        this.addTitle('Lesson Outline', 3);
+        this.addText(section.moduleIntroduction.lessonOutline, 11);
+        this.currentY += 10;
+      }
+    }
+
+    // Lessons
+    section.lessons.forEach((lesson, lessonIndex) => {
+      this.addTitle(`${sectionIndex + 1}.${lessonIndex + 1} ${lesson.title}`, 2);
+
+      if (lesson.summary) {
+        this.addTitle('Summary', 3);
+        this.addText(lesson.summary, 11);
+      }
+
+      if (lesson.whyItMatters) {
+        this.addTitle('Why It Matters', 3);
+        this.addText(lesson.whyItMatters, 11);
+      }
+
+      if (lesson.strategies?.length > 0) {
+        this.addTitle('Key Strategies', 3);
+        this.addBulletPoints(lesson.strategies);
+      }
+
+      if (lesson.resources && lesson.resources.length > 0) {
+        this.addTitle('Resources', 3);
+        lesson.resources.forEach(resource => {
+          this.addText(`• ${resource.label}${resource.category ? ` (${resource.category})` : ''}`, 11);
+        });
+        this.currentY += 5;
+      }
+
+      this.currentY += 10;
+    });
+
+    // Save the section PDF with a clean filename
+    const cleanSectionTitle = section.title.replace(/[^a-zA-Z0-9]/g, '_');
+    this.doc.save(`EAP_Section_${sectionIndex + 1}_${cleanSectionTitle}.pdf`);
   }
 }
 
@@ -311,6 +380,21 @@ export async function generateBinderPDF(): Promise<void> {
     console.log('PDF generated successfully!');
   } catch (error) {
     console.error('Error generating PDF:', error);
+    throw error;
+  }
+}
+
+export async function generateSectionPDF(sectionId: string): Promise<void> {
+  try {
+    const response = await fetch('/data/course.json');
+    const courseData: CourseData = await response.json();
+
+    const generator = new BinderPDFGenerator();
+    await generator.generateSectionPDF(courseData, sectionId);
+
+    console.log(`Section PDF generated successfully for section: ${sectionId}`);
+  } catch (error) {
+    console.error('Error generating section PDF:', error);
     throw error;
   }
 }
