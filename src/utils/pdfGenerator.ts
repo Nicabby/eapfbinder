@@ -51,6 +51,28 @@ export class BinderPDFGenerator {
     this.contentWidth = this.pageWidth - (this.margin * 2);
   }
 
+  private sanitizeText(text: string): string {
+    // Replace special characters that might cause PDF rendering issues
+    return text
+      .replace(/→/g, ' > ')  // Arrow to greater-than
+      .replace(/←/g, ' < ')  // Left arrow
+      .replace(/↑/g, ' ^ ')  // Up arrow
+      .replace(/↓/g, ' v ')  // Down arrow
+      .replace(/"/g, '"')    // Smart quotes to regular quotes
+      .replace(/"/g, '"')
+      .replace(/'/g, "'")
+      .replace(/'/g, "'")
+      .replace(/–/g, '-')    // En dash to hyphen
+      .replace(/—/g, '--')   // Em dash to double hyphen
+      .replace(/…/g, '...')  // Ellipsis to three dots
+      .replace(/[\u2000-\u206F]/g, ' ') // Remove other special spacing characters
+      .replace(/[\u2070-\u209F]/g, '')  // Remove superscript/subscript
+      .replace(/[\u20A0-\u20CF]/g, '')  // Remove currency symbols that might cause issues
+      .normalize('NFD')      // Normalize unicode
+      .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
+      .trim();
+  }
+
   private addNewPageIfNeeded(spaceNeeded: number = 20): void {
     if (this.currentY + spaceNeeded > this.pageHeight - this.margin) {
       this.doc.addPage();
@@ -62,13 +84,16 @@ export class BinderPDFGenerator {
     this.doc.setFontSize(fontSize);
     this.doc.setFont('helvetica', isBold ? 'bold' : (isItalic ? 'italic' : 'normal'));
 
+    // Sanitize text to handle special characters
+    const sanitizedText = this.sanitizeText(text);
+
     // Check if text contains bullet points and handle them specially
-    if (text.includes('•') || text.includes('\n•')) {
-      this.addFormattedText(text, fontSize, isBold, isItalic);
+    if (sanitizedText.includes('•') || sanitizedText.includes('\n•')) {
+      this.addFormattedText(sanitizedText, fontSize, isBold, isItalic);
       return;
     }
 
-    const lines = this.doc.splitTextToSize(text, this.contentWidth);
+    const lines = this.doc.splitTextToSize(sanitizedText, this.contentWidth);
     const lineHeight = fontSize * 0.4;
 
     this.addNewPageIfNeeded(lines.length * lineHeight + 5);
@@ -110,7 +135,9 @@ export class BinderPDFGenerator {
     // Fix: Ensure we don't exceed page boundaries by accounting for text indent
     const availableWidth = this.pageWidth - textIndent - this.margin;
 
-    const lines = this.doc.splitTextToSize(text, availableWidth);
+    // Sanitize text to handle special characters
+    const sanitizedText = this.sanitizeText(text);
+    const lines = this.doc.splitTextToSize(sanitizedText, availableWidth);
     const lineHeight = fontSize * 0.4;
 
     this.addNewPageIfNeeded(lines.length * lineHeight + 5);
@@ -124,7 +151,9 @@ export class BinderPDFGenerator {
   }
 
   private addFormattedText(text: string, fontSize: number = 11, isBold: boolean = false, isItalic: boolean = false): void {
-    const paragraphs = text.split('\n\n');
+    // Sanitize text first
+    const sanitizedText = this.sanitizeText(text);
+    const paragraphs = sanitizedText.split('\n\n');
 
     paragraphs.forEach((paragraph, index) => {
       if (paragraph.trim().startsWith('•')) {
@@ -171,7 +200,9 @@ export class BinderPDFGenerator {
     // Fix: Ensure we don't exceed page boundaries by accounting for text indent
     const availableWidth = this.pageWidth - textIndent - this.margin;
 
-    const lines = this.doc.splitTextToSize(text, availableWidth);
+    // Sanitize text to handle special characters
+    const sanitizedText = this.sanitizeText(text);
+    const lines = this.doc.splitTextToSize(sanitizedText, availableWidth);
     const lineHeight = fontSize * 0.4;
 
     this.addNewPageIfNeeded(lines.length * lineHeight + 5);
@@ -209,7 +240,8 @@ export class BinderPDFGenerator {
     this.currentY = 60;
     this.doc.setFontSize(24);
     this.doc.setFont('helvetica', 'bold');
-    const titleLines = this.doc.splitTextToSize(courseData.title, this.contentWidth);
+    const sanitizedTitle = this.sanitizeText(courseData.title);
+    const titleLines = this.doc.splitTextToSize(sanitizedTitle, this.contentWidth);
     this.doc.text(titleLines, this.margin, this.currentY, { align: 'left' });
     this.currentY += titleLines.length * 10 + 20;
 
