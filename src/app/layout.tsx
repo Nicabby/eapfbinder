@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -83,9 +84,11 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-        <div className="min-h-screen bg-background">
-          {children}
-        </div>
+        <ErrorBoundary>
+          <div className="min-h-screen bg-background">
+            {children}
+          </div>
+        </ErrorBoundary>
       </body>
     </html>
   );
